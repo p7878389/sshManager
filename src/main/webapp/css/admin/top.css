@@ -1,0 +1,14 @@
+body{
+    margin-left: 0px;
+    margin-right: 0px;
+    padding: 0;
+}
+#navUserName{
+    font-size: 16px;
+    color: #1155CC;
+    font-weight: 900!important;
+}
+.setting{
+    color: #1155CC!important;
+    font-weight: 900!important;
+}

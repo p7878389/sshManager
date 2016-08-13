@@ -1,0 +1,11 @@
+.panelDiv{
+    margin-top: 10%;
+    max-width: 28%;
+    margin-left: 33%;
+    float: none;
+}
+.body{
+    background: #fafafa;
+    margin: 0px;
+    padding: 0px;
+}

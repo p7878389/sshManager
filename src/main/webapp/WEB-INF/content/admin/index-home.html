@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh-CN">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="../plug-in/jquery-1.10.2.min.js" type="text/javascript" ></script>
+
+    <!--<script src="../plug-in/bootstrap/js/bootstrap.min.js" type="text/javascript" ></script>-->
+
+    <link rel="stylesheet" href="../plug-in/bootstrap/css/bootstrap.min.css">
+
+    <script src="../js/service.js" type="text/javascript"></script>
+
+    <title>首页</title>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div id="top"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-2">
+                <div id="left">left</div>
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-10">
+                <div id="rigth">rigth</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div id="foot">foot</div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    $("#top").load("../admin/index-nav.html");
+</script>
+</html>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!-- 连接池配置 -->
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxTotal" value="${redis.maxTotal}"/>
+        <property name="maxIdle" value="${redis.maxIdle}"/>
+        <property name="maxWaitMillis" value="${redis.maxWaitMillis}"/>
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+        <property name="testOnReturn" value="${redis.testOnReturn}"/>
+    </bean>
+
+    <bean id="redisClient" class="com.manage.redis.RedisClient" >
+        <!--<property name="jedisPoolConfig" ref="jedisPoolConfig"></property>-->
+        <!--<property name="host" value="${redis.host}"></property>-->
+        <!--<property name="flag" value="${redis.cacheEnabled}"></property>-->
+        <!--<property name="passWord" value="${redis.pass}"></property>-->
+        <!--<property name="port" value="${redis.port}"></property>-->
+        <!--<property name="expire" value="${redis.timeout}"></property>-->
+        <constructor-arg index="0" name="jedisPoolConfig" ref="jedisPoolConfig"></constructor-arg>
+        <constructor-arg index="1" name="host" value="${redis.host}"></constructor-arg>
+        <constructor-arg index="2" name="port" value="${redis.port}"></constructor-arg>
+        <constructor-arg index="3" name="passWord" value="${redis.pass}"></constructor-arg>
+        <constructor-arg index="4" name="expire" value="${redis.timeout}"></constructor-arg>
+        <constructor-arg index="5" name="flag" value="${redis.cacheEnabled}"></constructor-arg>
+    </bean>
+
+    <!-- redis-shiro cacheManager -->
+    <bean id="redisCacheManager" class="com.manage.shiro.cache.RedisCacheManager">
+        <property name="redisClient" ref="redisClient"></property>
+    </bean>
+
+    <!-- shiro缓存 -->
+    <bean id="shiroRedisCache" class="com.manage.shiro.cache.ShiroRedisCache">
+        <property name="redisClient" ref="redisClient"></property>
+    </bean>
+
+    <!-- 自定义cacheManager -->
+    <bean id="redisCache" class="com.manage.shiro.cache.RedisCache">
+        <constructor-arg ref="shiroRedisCache"></constructor-arg>
+    </bean>
+
+</beans>
