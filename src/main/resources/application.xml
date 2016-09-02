@@ -45,7 +45,6 @@
                 <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
                 <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
                 <prop key="hibernate.connection.autocommit">${hibernate.connection.autocommit}</prop>
-                <!-- <prop key="hibernate.query.factory_class">${hibernate.query.factory_class}</prop> -->
                 <prop key="connection.useUnicode">${hibernate.connection.useUnicode}</prop>
                 <prop key="connection.characterEncoding">${hibernate.characterEncoding}</prop>
                 <prop key="hibernate.current_session_context_class">${hibernate.session.content}</prop>
@@ -85,10 +84,10 @@
     <!-- aop配置 -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 
+
     <!-- 构造方法注入redisManager -->
     <bean id="cacheAspect" class="com.manage.annotations.CacheAspect">
-        <constructor-arg index="0" ref="redisClient"></constructor-arg>
+        <property name="redisClient" ref="redisClient"/>
     </bean>
-
 
 </beans>

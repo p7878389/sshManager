@@ -1,41 +1,34 @@
 $(function () {
-
+    var userId = sessionStorage.getItem("userId");
     var userName = sessionStorage.getItem("userName");
     $("#navUserName").html(userName);
 
     $("#userInfoDialog").bind("click", function () {
-        var userId = sessionStorage.getItem("userId");
         userInfo = new Service("../user");
         userInfo.getById(userId, {success: findUserCallback});
     });
 
     function findUserCallback(data) {
-        if (data.errorCode == 0) {
-            var $html = template('personalCenter', data.object);
-            $html = $html.toString();
-            BootstrapDialog.show({
-                title: '个人中心',
-                message: function () {
-                    return $($html);
-                },
-                buttons: [{
-                    label: '保存',
-                    icon: 'glyphicon glyphicon-check',
-                    cssClass: 'btn-success',
-                    action: function () {
+        var $html = template('personalCenter', data.object);
+        $html = $html.toString();
+        dialogData('个人中心', $html, updateUser);
+    }
 
-                    }
-                }, {
-                    label: '关闭',
-                    icon: 'glyphicon glyphicon-remove',
-                    cssClass: 'btn-warning',
-                    action: function (dialog) {
-                        dialog.close();
-                    }
-                }]
-            });
-        }else{
-        }
+    function updateUser() {
+        personService = new Service("../user/updateUser");
+        var passWord = $("#passWord").val();
+        var userName = $("#userName").val();
+        var salt = $("#salt").val();
+        var state = $("#state").val();
+        param = {"passWord": passWord, "salt": salt, "userId": userId, "userName": userName, "state": state};
+        personService.add(param, updateUserCallBack,updateUserErrorCallBack);
+    }
+
+    function updateUserCallBack(data) {
+        dialogMsg('用户信息修改成功');
+    }
+    function updateUserErrorCallBack(data) {
+        dialogMsg(data.msg);
     }
 
     $("#logout").bind("click", function () {

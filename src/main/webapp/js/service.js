@@ -6,10 +6,11 @@ function Service(url) {
 	this.defalut = {
 			success:function(){},
 			err:function(data,alert){
-				$(alert+" .alert strong").html("");
-				$(alert+" .alert-list").html("");
-				$(alert+" .alert-list").append("<div class='alert alert-danger'><strong></strong></div>");
-				$(alert+" .alert strong").html(data.msg);
+				// $(alert+" .alert strong").html("");
+				// $(alert+" .alert-list").html("");
+				// $(alert+" .alert-list").append("<div class='alert alert-danger'><strong></strong></div>");
+				// $(alert+" .alert strong").html(data.msg);
+				BootstrapDialog.alert(data.msg);
 			},
 			loginAgain:function(alert){
 				$(alert+" .alert strong").html("");
@@ -62,10 +63,6 @@ Service.prototype = {
 			url: this.rootUrl + '?' + $.param(param),
 			dataType: "json",
 			success: function(data){
-				if(data.errorCode == token_invalid_errorCode){
-					opt.loginAgain(alert);
-					return ;
-				}
 				if(data.errorCode != 0 ){
 					opt.err(data);
 					return ;
@@ -84,10 +81,6 @@ Service.prototype = {
 			url: this.rootUrl + '?' + $.param(param),
 			dataType: "json",
 			success: function(data){
-				if(data.errorCode == token_invalid_errorCode){
-					opt.loginAgain(alert);
-					return ;
-				}
 				if( data.errCode != 0){
 					opt.err(data);
 					return ;

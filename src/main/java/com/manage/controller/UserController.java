@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -23,6 +24,7 @@ public class UserController {
 
     /**
      * 查询用户信息
+     *
      * @param id
      * @return
      */
@@ -31,6 +33,18 @@ public class UserController {
         User user = userService.findById(id);
         BaseResult result = new BaseResult();
         result.setObject(user);
+        return ResponseEntity.ok().body(result);
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @param user
+     * @return
+     */
+    @RequestMapping(path = "updateUser", method = RequestMethod.POST)
+    public ResponseEntity<BaseResult> updateUser(@RequestBody User user) {
+        BaseResult result = userService.saveOrUpdate(user);
         return ResponseEntity.ok().body(result);
     }
 }

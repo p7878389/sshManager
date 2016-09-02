@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:aop="http://www.springframework.org/schema/aop"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="
-          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-          http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
-          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
-          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+
+            http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <!-- 开启缓存注解 -->
+    <cache:annotation-driven cache-manager="cacheManager" proxy-target-class="true"/>
+    <!-- 引入redis配置文件 -->
 
 
     <!-- 连接池配置 -->
@@ -20,19 +20,39 @@
         <property name="testOnReturn" value="${redis.testOnReturn}"/>
     </bean>
 
-    <bean id="redisClient" class="com.manage.redis.RedisClient" >
-        <!--<property name="jedisPoolConfig" ref="jedisPoolConfig"></property>-->
-        <!--<property name="host" value="${redis.host}"></property>-->
-        <!--<property name="flag" value="${redis.cacheEnabled}"></property>-->
-        <!--<property name="passWord" value="${redis.pass}"></property>-->
-        <!--<property name="port" value="${redis.port}"></property>-->
-        <!--<property name="expire" value="${redis.timeout}"></property>-->
+    <!-- redis链接工厂 -->
+    <bean id="connectionFactory"
+          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${redis.host}"></property>
+        <property name="port" value="${redis.port}"></property>
+        <property name="password" value="${redis.pass}"></property>
+        <property name="poolConfig" ref="jedisPoolConfig"></property>
+    </bean>
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="connectionFactory"/>
+    </bean>
+
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="com.manage.redis.SpringRedisCache">
+                    <property name="redisTemplate" ref="redisTemplate"></property>
+                    <property name="name" value="cacheManager"></property>
+                    <property name="timeout" value="${redis.timeout}"></property>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="redisClient" class="com.manage.redis.RedisClient">
         <constructor-arg index="0" name="jedisPoolConfig" ref="jedisPoolConfig"></constructor-arg>
         <constructor-arg index="1" name="host" value="${redis.host}"></constructor-arg>
         <constructor-arg index="2" name="port" value="${redis.port}"></constructor-arg>
         <constructor-arg index="3" name="passWord" value="${redis.pass}"></constructor-arg>
         <constructor-arg index="4" name="expire" value="${redis.timeout}"></constructor-arg>
         <constructor-arg index="5" name="flag" value="${redis.cacheEnabled}"></constructor-arg>
+        <constructor-arg index="6" name="shiroCache" value="${redis.shiroCache}"></constructor-arg>
     </bean>
 
     <!-- redis-shiro cacheManager -->

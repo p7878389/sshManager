@@ -43,8 +43,8 @@ public class RedisSessionDAO extends AbstractSessionDAO {
             logger.error("session or session id is null");
             return;
         }
-        session.setTimeout(shiroRedisCache.getRedisClient().getExpire()*1000);
-        byte[] sessionByte = SerializeUtils.serialize(session);
+        session.setTimeout(shiroRedisCache.getRedisClient().getExpire() * 1000);
+        byte[] sessionByte = SerializeUtils.INSTANCE.serialize(session);
         this.shiroRedisCache.set(getByteKey(session.getId().toString()), sessionByte, shiroRedisCache.getRedisClient().getExpire());
     }
 
@@ -65,7 +65,7 @@ public class RedisSessionDAO extends AbstractSessionDAO {
         Set<byte[]> keys = shiroRedisCache.keys(this.keyPrefix + "*");
         if (keys != null && keys.size() > 0) {
             for (byte[] key : keys) {
-                Session s = (Session) SerializeUtils.deserialize(shiroRedisCache.get(key));
+                Session s = (Session) SerializeUtils.INSTANCE.deserialize(shiroRedisCache.get(key));
                 sessions.add(s);
             }
         }
@@ -88,7 +88,7 @@ public class RedisSessionDAO extends AbstractSessionDAO {
             logger.error("session id is null");
             return null;
         }
-        Session s = (Session) SerializeUtils.deserialize(shiroRedisCache.get(this.getByteKey(sessionId)));
+        Session s = (Session) SerializeUtils.INSTANCE.deserialize(shiroRedisCache.get(this.getByteKey(sessionId)));
         return s;
     }
 

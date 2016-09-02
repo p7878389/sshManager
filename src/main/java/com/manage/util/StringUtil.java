@@ -8,8 +8,10 @@ import java.util.regex.Pattern;
 /**
  * Created by Administrator on 2016/6/26.
  */
-public class StringUtil {
-    
+public enum StringUtil {
+
+    INSTANCE;
+
     public static boolean isNull(String str) {
         return (null == str || str.trim().length() <= 0);
     }

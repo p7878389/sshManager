@@ -30,14 +30,14 @@
     </bean>
 
     <!-- 会话DAO 使用redis管理 -->
-    <!--<bean id="sessionDao" class="com.manage.shiro.cache.RedisSessionDAO">-->
-        <!--<property name="shiroRedisCache" ref="shiroRedisCache"/>-->
-        <!--<property name="sessionIdGenerator" ref="sessionIdGenerator"/>-->
-    <!--</bean>-->
-
-    <bean id="sessionDao" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+    <bean id="sessionDao" class="com.manage.shiro.cache.RedisSessionDAO">
+        <property name="shiroRedisCache" ref="shiroRedisCache"/>
         <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
     </bean>
+
+    <!--<bean id="sessionDao" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">-->
+        <!--<property name="sessionIdGenerator" ref="sessionIdGenerator"/>-->
+    <!--</bean>-->
 
     <!-- 会话验证调度器 检查会话是否过期 -->
     <bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">

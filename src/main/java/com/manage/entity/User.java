@@ -1,5 +1,7 @@
 package com.manage.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -77,6 +79,7 @@ public class User implements java.io.Serializable {
         this.state = state;
     }
 
+    @JsonIgnore
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
     public Set<Userrole> getUserroles() {
         return this.userroles;

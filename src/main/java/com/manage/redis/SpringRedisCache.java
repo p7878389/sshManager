@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
@@ -21,7 +22,7 @@ import static org.apache.commons.lang.ArrayUtils.toObject;
  */
 public class SpringRedisCache implements Cache {
 
-    private final  static Logger log= LoggerFactory.getLogger(SpringRedisCache.class);
+    private final static Logger log = LoggerFactory.getLogger(SpringRedisCache.class);
 
     /***
      * redis模板
@@ -36,6 +37,7 @@ public class SpringRedisCache implements Cache {
      * 超时时间
      */
     private long timeout;
+
     /***
      * 获取缓存名称
      *
@@ -71,7 +73,7 @@ public class SpringRedisCache implements Cache {
                 if (value == null) {
                     return null;
                 }
-                return SerializeUtils.deserialize(value);
+                return SerializeUtils.INSTANCE.deserialize(value);
 
             }
         });
@@ -97,7 +99,7 @@ public class SpringRedisCache implements Cache {
                     if (value == null) {
                         return null;
                     }
-                    return SerializeUtils.deserialize(value);
+                    return SerializeUtils.INSTANCE.deserialize(value);
                 }
             });
             if (finalType != null && finalType.isInstance(object) && null != object) {
@@ -117,7 +119,7 @@ public class SpringRedisCache implements Cache {
             public Long doInRedis(RedisConnection connection)
                     throws DataAccessException {
                 byte[] keyb = keyf.getBytes();
-                byte[] valueb = SerializeUtils.serialize(valuef);
+                byte[] valueb = SerializeUtils.INSTANCE.serialize(valuef);
                 connection.set(keyb, valueb);
                 connection.expire(keyb, timeout);
                 return 1L;
@@ -133,6 +135,7 @@ public class SpringRedisCache implements Cache {
 
     /***
      * 根据key删除缓存
+     *
      * @param key
      */
     @Override
@@ -159,10 +162,10 @@ public class SpringRedisCache implements Cache {
     }
 
 
-
     public void setRedisTemplate(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
+
     public void setName(String name) {
         this.name = name;
     }

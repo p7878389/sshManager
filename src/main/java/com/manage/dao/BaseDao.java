@@ -14,4 +14,6 @@ public interface BaseDao<T,PK> {
 
     public List<T> findByHQL(String hql, Object... params);
 
+    public void saveOrUpdate(T t);
+
 }

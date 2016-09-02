@@ -6,7 +6,9 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/6/26.
  */
-public class ErrorCodeInfo {
+public enum  ErrorCodeInfo {
+
+    INSTANCE;
 
     private static final Map<Integer, String> errorMsg = new HashMap<Integer, String>();
 
@@ -18,6 +20,9 @@ public class ErrorCodeInfo {
     public static final int USER_NULLPOINTER = 100001;
     public static final int USER_PASSWORD_ERROR = 100002;
     public static final int USER_LOGOUT_ERROR = 100003;
+    public static final int USER_SAVE_ERROR = 100004;
+    public static final int USER_UPDATE_ERROR = 100005;
+    public static final int USER_DELETE_ERROR = 100006;
 
 
     /***
@@ -37,12 +42,17 @@ public class ErrorCodeInfo {
     /***
      * 用户相关错误信息
      */
-    public static void userRelevant(){
+    public static void userRelevant() {
         errorMsg.put(SHIRO_ERROR, "shiro未知错误");
         errorMsg.put(USER_NULLPOINTER, "用户不存在");
         errorMsg.put(USER_PASSWORD_ERROR, "用户名或密码错误");
         errorMsg.put(USER_LOGOUT_ERROR, "用户注销失败");
+        errorMsg.put(USER_SAVE_ERROR, "用户新增失败");
+        errorMsg.put(USER_UPDATE_ERROR, "用户保存失败");
+        errorMsg.put(USER_DELETE_ERROR, "用户删除失败");
+
     }
+
     /**
      * 根据错误代码获取错误信息
      *
