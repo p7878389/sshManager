@@ -8,16 +8,16 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import java.util.Set;
-
 /**
  * Created by Administrator on 2016/6/27.
  */
-public class RedisManager extends RedisClient{
+public class RedisManager extends RedisClient {
 
     private static Logger logger = LoggerFactory.getLogger(RedisManager.class);
 
-    /**单位为 秒(s) */
+    /**
+     * 单位为 秒(s)
+     */
     private int expire = 0;
 
     private JedisPool jedisPool;
@@ -27,6 +27,7 @@ public class RedisManager extends RedisClient{
 
     /***
      * 获取缓存中 shiro session
+     *
      * @param key
      * @return
      */
@@ -37,7 +38,7 @@ public class RedisManager extends RedisClient{
             final byte[] keyByte = key.getBytes();
             final byte[] valueByte = jedis.get(keyByte);
             if (valueByte != null) {
-                session = (Session) SerializeUtils.deserialize(valueByte);
+                session = (Session) SerializeUtils.INSTANCE.deserialize(valueByte);
             }
         } finally {
             jedisPool.returnResource(jedis);
@@ -55,7 +56,7 @@ public class RedisManager extends RedisClient{
     public Object setObject(String key, Object value, int expire) {
         Jedis jedis = jedisPool.getResource();
         try {
-            jedis.set(SerializeUtils.serialize(key), SerializeUtils.serialize(value));
+            jedis.set(SerializeUtils.INSTANCE.serialize(key), SerializeUtils.INSTANCE.serialize(value));
             if (expire != 0) {
                 jedis.expire(key, expire);
             } else {
@@ -77,33 +78,35 @@ public class RedisManager extends RedisClient{
      */
     public Object getObject(String key) {
         Jedis jedis = jedisPool.getResource();
-        final byte[] keyByte = SerializeUtils.serialize(key);
+        final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
         byte[] valueByte = null;
         try {
             valueByte = jedis.get(keyByte);
-        }finally {
+        } finally {
             jedisPool.returnResource(jedis);
         }
-        return SerializeUtils.deserialize(valueByte);
+        return SerializeUtils.INSTANCE.deserialize(valueByte);
     }
 
 
     /***
      * 根据key删除缓存对象
+     *
      * @param key
      */
-    public void delObject(String key){
+    public void delObject(String key) {
         Jedis jedis = jedisPool.getResource();
-        final byte[] keyByte = SerializeUtils.serialize(key);
-        try{
+        final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
+        try {
             jedis.del(keyByte);
-        }finally {
+        } finally {
             jedisPool.returnResource(jedis);
         }
     }
 
     /***
      * 把对象放入Hash中 自定义注解使用
+     *
      * @param key
      * @param field
      * @param o
@@ -111,9 +114,9 @@ public class RedisManager extends RedisClient{
      */
     public void hset(String key, String field, Object o, int expire) {
         Jedis jedis = jedisPool.getResource();
-        final byte[] keyByte = SerializeUtils.serialize(key);
-        final byte[] fieldByte = SerializeUtils.serialize(field);
-        final byte[] objByte = SerializeUtils.serialize(o);
+        final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
+        final byte[] fieldByte = SerializeUtils.INSTANCE.serialize(field);
+        final byte[] objByte = SerializeUtils.INSTANCE.serialize(o);
         try {
             jedis.hset(keyByte, fieldByte, objByte);
             if (expire != 0) {
@@ -128,6 +131,7 @@ public class RedisManager extends RedisClient{
 
     /**
      * 从Hash中获取对象 自定义注解
+     *
      * @param key
      * @param field
      * @param clzz
@@ -136,11 +140,11 @@ public class RedisManager extends RedisClient{
      */
     public <T> T hget(String key, String field, Class<T> clzz) {
         Jedis jedis = jedisPool.getResource();
-        final byte[] keyByte = SerializeUtils.serialize(key);
-        final byte[] fieldByte = SerializeUtils.serialize(field);
+        final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
+        final byte[] fieldByte = SerializeUtils.INSTANCE.serialize(field);
         Object object = null;
         try {
-            object = SerializeUtils.deserialize(jedis.hget(keyByte, fieldByte));
+            object = SerializeUtils.INSTANCE.deserialize(jedis.hget(keyByte, fieldByte));
             if (clzz != null && clzz.isInstance(object) && null != object) {
                 return (T) object;
             } else {
@@ -153,13 +157,14 @@ public class RedisManager extends RedisClient{
 
     /***
      * 从Hash中删除对象 自定义注解
+     *
      * @param key
      * @param field
      */
     public void hdel(String key, String field) {
         Jedis jedis = jedisPool.getResource();
-        final byte[] keyByte = SerializeUtils.serialize(key);
-        final byte[] fieldByte = SerializeUtils.serialize(field);
+        final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
+        final byte[] fieldByte = SerializeUtils.INSTANCE.serialize(field);
         try {
             Object result = jedis.hdel(keyByte, fieldByte);
         } finally {

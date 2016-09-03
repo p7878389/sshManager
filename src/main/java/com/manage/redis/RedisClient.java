@@ -1,12 +1,11 @@
 package com.manage.redis;
 
 
+import com.manage.util.JsonUtil;
 import com.manage.util.SerializeUtils;
 import org.apache.shiro.session.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -16,7 +15,7 @@ import redis.clients.jedis.JedisPoolConfig;
  */
 public class RedisClient {
 
-    private static final Logger log= LoggerFactory.getLogger(RedisClient.class);
+    private static final Logger log = LoggerFactory.getLogger(RedisClient.class);
 
     private JedisPoolConfig jedisPoolConfig;
 
@@ -35,29 +34,30 @@ public class RedisClient {
 
     private boolean flag;
 
-    public RedisClient(){
-        System.out.print(111);
+    private boolean shiroCache;
+
+    public RedisClient() {
     }
 
-    public RedisClient(JedisPoolConfig jedisPoolConfig,String host,int port,String passWord,int expire,boolean flag) {
+    public RedisClient(JedisPoolConfig jedisPoolConfig, String host, int port, String passWord, int expire, boolean flag,boolean shiroCache) {
         /**
          * 判断是否请用redis缓存
          */
         if (flag) {
+
+            this.host = host;
+            this.jedisPoolConfig = jedisPoolConfig;
+            this.passWord = passWord;
+            this.port = port;
+            this.flag = flag;
+            this.expire = expire;
+            this.shiroCache=shiroCache;
             try {
-                this.host=host;
-                this.jedisPoolConfig=jedisPoolConfig;
-                this.passWord=passWord;
-                this.port=port;
-                this.flag=flag;
-                this.expire=expire;
-
-                jedisPool = new JedisPool(jedisPoolConfig, host, port, expire, passWord);
-
+                this.jedisPool = new JedisPool(this.jedisPoolConfig, this.host, this.port, this.expire, this.passWord);
                 log.info("redis init success");
-            }catch (Exception e){
-                log.error("redis init error",e);
-                log.info("redis init error");
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("redis init error", e);
             }
         }
 
@@ -76,7 +76,7 @@ public class RedisClient {
             final byte[] keyByte = key.getBytes();
             final byte[] valueByte = jedis.get(keyByte);
             if (valueByte != null) {
-                session = (Session) SerializeUtils.deserialize(valueByte);
+                session = (Session) SerializeUtils.INSTANCE.deserialize(valueByte);
             }
         } finally {
             jedisPool.returnResource(jedis);
@@ -92,9 +92,9 @@ public class RedisClient {
      * @param expire
      */
     public Object setObject(String key, Object value, int expire) {
-        Jedis jedis= jedisPool.getResource();
+        Jedis jedis = jedisPool.getResource();
         try {
-            jedis.set(SerializeUtils.serialize(key), SerializeUtils.serialize(value));
+            jedis.set(SerializeUtils.INSTANCE.serialize(key), SerializeUtils.INSTANCE.serialize(value));
             if (expire != 0) {
                 jedis.expire(key, expire);
             } else {
@@ -116,14 +116,32 @@ public class RedisClient {
      */
     public Object getObject(String key) {
         Jedis jedis = jedisPool.getResource();
-        final byte[] keyByte = SerializeUtils.serialize(key);
+        final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
         byte[] valueByte = null;
         try {
             valueByte = jedis.get(keyByte);
         } finally {
             jedisPool.returnResource(jedis);
         }
-        return SerializeUtils.deserialize(valueByte);
+        return SerializeUtils.INSTANCE.deserialize(valueByte);
+    }
+
+    /***
+     * 根据key获取缓存对象
+     *
+     * @param key
+     * @return
+     */
+    public <T> T getObject(String key, Class<T> clzz) {
+        Jedis jedis = jedisPool.getResource();
+        final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
+        byte[] valueByte = null;
+        try {
+            valueByte = jedis.get(keyByte);
+        } finally {
+            jedisPool.returnResource(jedis);
+        }
+        return (T) SerializeUtils.INSTANCE.deserialize(valueByte);
     }
 
 
@@ -134,7 +152,7 @@ public class RedisClient {
      */
     public void delObject(String key) {
         Jedis jedis = jedisPool.getResource();
-        final byte[] keyByte = SerializeUtils.serialize(key);
+        final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
         try {
             jedis.del(keyByte);
         } finally {
@@ -152,9 +170,9 @@ public class RedisClient {
      */
     public void hset(String key, String field, Object o, int expire) {
         Jedis jedis = jedisPool.getResource();
-        final byte[] keyByte = SerializeUtils.serialize(key);
-        final byte[] fieldByte = SerializeUtils.serialize(field);
-        final byte[] objByte = SerializeUtils.serialize(o);
+        final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
+        final byte[] fieldByte = SerializeUtils.INSTANCE.serialize(field);
+        final byte[] objByte = SerializeUtils.INSTANCE.serialize (o);
         try {
             jedis.hset(keyByte, fieldByte, objByte);
             if (expire != 0) {
@@ -177,17 +195,21 @@ public class RedisClient {
      * @return
      */
     public <T> T hget(String key, String field, Class<T> clzz) {
-        Jedis jedis = jedisPool.getResource();
-        final byte[] keyByte = SerializeUtils.serialize(key);
-        final byte[] fieldByte = SerializeUtils.serialize(field);
-        Object object = null;
+        Jedis jedis = null;
         try {
-            object = SerializeUtils.deserialize(jedis.hget(keyByte, fieldByte));
+            jedis = jedisPool.getResource();
+            final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
+            final byte[] fieldByte = SerializeUtils.INSTANCE.serialize(field);
+            Object object = null;
+            object = SerializeUtils.INSTANCE.deserialize (jedis.hget(keyByte, fieldByte));
             if (clzz != null && clzz.isInstance(object) && null != object) {
                 return (T) object;
             } else {
                 return null;
             }
+        } catch (Exception e) {
+            log.error("jedis init error");
+            return null;
         } finally {
             jedisPool.returnResource(jedis);
         }
@@ -201,14 +223,50 @@ public class RedisClient {
      */
     public void hdel(String key, String field) {
         Jedis jedis = jedisPool.getResource();
-        final byte[] keyByte = SerializeUtils.serialize(key);
-        final byte[] fieldByte = SerializeUtils.serialize(field);
+        final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
+        final byte[] fieldByte = SerializeUtils.INSTANCE.serialize(field);
         try {
             jedis.hdel(keyByte, fieldByte);
         } finally {
             jedisPool.returnResource(jedis);
         }
     }
+
+
+    public <T> T getRedisObject(String key,Class<T> clzz){
+        Jedis jedis = jedisPool.getResource();
+        try {
+            String objStr=jedis.get(key);
+            return (T) JsonUtil.INSTANCE.jsonStrTObject(objStr,clzz);
+        } finally {
+            jedisPool.returnResource(jedis);
+        }
+    }
+
+    public void setRedisObject(String key, Object o, int expire) {
+        Jedis jedis = jedisPool.getResource();
+        String objJson=JsonUtil.INSTANCE.objectToJson(o);
+        try {
+            jedis.set(key,objJson);
+            if (expire != 0) {
+                jedis.expire(key, expire);
+            } else {
+                jedis.expire(key, this.expire);
+            }
+        } finally {
+            jedisPool.returnResource(jedis);
+        }
+    }
+
+    public void delRedisObject(String key) {
+        Jedis jedis = jedisPool.getResource();
+        try {
+            jedis.decr(key);
+        } finally {
+            jedisPool.returnResource(jedis);
+        }
+    }
+
 
     public int getExpire() {
         return expire;
@@ -264,5 +322,13 @@ public class RedisClient {
 
     public void setFlag(boolean flag) {
         this.flag = flag;
+    }
+
+    public boolean isShiroCache() {
+        return shiroCache;
+    }
+
+    public void setShiroCache(boolean shiroCache) {
+        this.shiroCache = shiroCache;
     }
 }

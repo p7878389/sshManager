@@ -1,21 +1,42 @@
 package com.manage.util;
 
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
-/**
- * Created by Administrator on 2016/6/29.
- */
-public class JsonUtil {
+import java.util.List;
+
+public enum  JsonUtil {
+
+    INSTANCE;
 
     /**
-     * 字符串转对象
+     * 字符串转java对象
      * @param jsonStr
      * @param clzz
      * @return
      */
-    public Object  jsonStrToObject(String jsonStr,Class clzz){
-        JSONObject jsonObject=JSONObject.fromObject(jsonStr);
-        return JSONObject.toBean(jsonObject,clzz);
+    public Object  jsonStrTObject(String jsonStr,Class clzz){
+       return  JSON.parseObject(jsonStr, clzz);
+    }
+
+
+    /***
+     * 对象转json
+     * @param o
+     * @return
+     */
+    public String objectToJson(Object o){
+       return  JSONObject.toJSONString(o);
+    }
+
+    /**
+     * 字符串转list集合
+     * @param json
+     * @param o
+     * @return
+     */
+    public List jsonStrToList(String json, Object o) {
+        return JSON.parseArray(json, o.getClass());
     }
 }

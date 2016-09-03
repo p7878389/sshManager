@@ -23,6 +23,7 @@ public class Resource implements java.io.Serializable {
 
     private Integer resourceId;
     private String name;
+    // 1菜单 2
     private Integer type;
     private String url;
     private Integer parentId;

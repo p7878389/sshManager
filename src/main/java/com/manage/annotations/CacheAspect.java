@@ -8,7 +8,6 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -55,32 +54,36 @@ public class CacheAspect {
     @Around("setCacheRedis()")
     public Object setCache(ProceedingJoinPoint joinPoint) {
 
+        Object result = null;
+        Method method = getMethod(joinPoint);
+        Cacheable cacheable = method.getAnnotation(Cacheable.class);
         /**
          * 判断是否开启redis缓存
          */
         if (!redisClient.isFlag()) {
-            return null;
+            try {
+                result = joinPoint.proceed();
+                return result;
+            } catch (Throwable throwable) {
+                logger.error("cache param for key{} , fieldKey{} ", cacheable.key(), cacheable.fieldKey());
+                logger.error("cache Throwable",throwable);
+            }
         }
 
-        Object result = null;
-
-        Method method = getMethod(joinPoint);
-
-        Cacheable cacheable = method.getAnnotation(Cacheable.class);
-
         String fieldKey = parseKey(cacheable.fieldKey(), method, joinPoint.getArgs());
+
+        String redisKey=cacheable.key()+fieldKey;
 
         //获取方法的返回类型,让缓存可以返回正确的类型
         Class returnType = ((MethodSignature) joinPoint.getSignature()).getReturnType();
 
         //使用redis 的hash进行存取，易于管理
-        result = redisClient.hget(cacheable.key(), fieldKey, returnType);
+        result = redisClient.getRedisObject( redisKey, returnType);
 
         if (result == null) {
             try {
                 result = joinPoint.proceed();
-                Assert.notNull(fieldKey);
-                redisClient.hset(cacheable.key(), fieldKey, result, cacheable.expireTime());
+                redisClient.setRedisObject(redisKey, result, cacheable.expireTime());
             } catch (Throwable e) {
                 logger.error("annotation Throwable", e);
             }
@@ -104,7 +107,7 @@ public class CacheAspect {
         Method method = getMethod(joinPoint);
         CacheEvict cacheable = method.getAnnotation(CacheEvict.class);
         String fieldKey = parseKey(cacheable.fieldKey(), method, joinPoint.getArgs());
-        redisClient.hdel(cacheable.key(), fieldKey);
+        redisClient.delRedisObject( fieldKey);
     }
 
 
@@ -127,19 +130,20 @@ public class CacheAspect {
         //获取方法的返回类型,让缓存可以返回正确的类型
         Class returnType = ((MethodSignature) joinPoint.getSignature()).getReturnType();
 
+        String redisKey=cacheable.key()+fieldKey;
         //使用redis 的hash进行存取，易于管理
-        result = redisClient.hget(cacheable.key(), fieldKey, returnType);
+        result = redisClient.getRedisObject(redisKey, returnType);
 
         try {
             if (result == null) {
                 result = joinPoint.proceed();
                 Assert.notNull(fieldKey);
-                redisClient.hset(cacheable.key(), fieldKey, result, cacheable.expireTime());
+                redisClient.setRedisObject(redisKey,result, cacheable.expireTime());
             } else {
-                redisClient.hdel(cacheable.key(), fieldKey);
+                redisClient.delRedisObject(redisKey);
                 result = joinPoint.proceed();
                 Assert.notNull(fieldKey);
-                redisClient.hset(cacheable.key(), fieldKey, result, cacheable.expireTime());
+                redisClient.setRedisObject(redisKey, result, cacheable.expireTime());
             }
         } catch (Throwable e) {
             logger.error("annotation Throwable", e);

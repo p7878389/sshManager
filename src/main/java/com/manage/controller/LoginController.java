@@ -1,8 +1,6 @@
 package com.manage.controller;
 
 import com.manage.entity.User;
-import com.manage.redis.RedisClient;
-import com.manage.result.bean.UserResult;
 import com.manage.serviceImp.UserServiceImpl;
 import com.manage.util.BaseResult;
 import com.manage.util.ErrorCodeInfo;
@@ -12,17 +10,13 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-
-import static org.apache.shiro.web.filter.mgt.DefaultFilter.user;
 
 /**
  * Created by Administrator on 2016/6/28.
@@ -45,17 +39,18 @@ public class LoginController {
     @RequestMapping(value = "/loginIn", method = RequestMethod.POST)
     public ResponseEntity<BaseResult> login(@RequestBody User user, HttpServletRequest request) {
         BaseResult result = new BaseResult();
-        user = userService.findByUser(user);
+        user = userService.userLogin(user);
         if (user == null) {
             result = ErrorCodeInfo.getBaseResult(ErrorCodeInfo.USER_PASSWORD_ERROR);
         } else {
             Subject subject = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassWord());
+            //是否记住密码
+            token.setRememberMe(true);
             subject.login(token);
             logger.info("session---" + subject.getSession().getId());
-            request.getSession().setAttribute("user", user.getUserId());
-            UserResult userResult=new UserResult(user);
-            result.setObject(userResult);
+            request.getSession().setAttribute("admin", user);
+            result.setObject(user);
         }
         return ResponseEntity.ok().body(result);
     }

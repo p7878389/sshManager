@@ -2,16 +2,13 @@ package com.manage.Interceptor;
 
 
 import com.manage.controller.LoginController;
-import com.manage.entity.User;
 import com.manage.redis.RedisClient;
-import com.manage.shiro.cache.RedisManager;
 import com.manage.util.StringUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -41,14 +38,13 @@ public class DocInterceptor extends HandlerInterceptorAdapter {
         log.info("contextPath:" + contextPath);
         log.info("url:" + url);
 
-        Subject subject = SecurityUtils.getSubject();
-        Object sessionInfo=null;
-        //判断是否启用redis缓存
-        if(redisClient.isFlag()){
-            sessionInfo= subject.getSession().getId();
+        //判断是否启用redis管理shiro缓存
+        Object sessionInfo;
+        if(redisClient.isShiroCache()){
+            sessionInfo= request.getSession().getId();
             sessionInfo = redisClient.getSession(sessionKey + sessionInfo);
         }else{
-            sessionInfo=subject.getSession().getAttribute("user");
+            sessionInfo=request.getSession().getAttribute("user");
         }
         if (sessionInfo == null || StringUtil.isNull(sessionInfo.toString())) {
             response.sendRedirect("../admin/login.html");

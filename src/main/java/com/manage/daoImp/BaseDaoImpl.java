@@ -68,6 +68,7 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
         return (T) this.getSession().get(this.clazz, id);
     }
 
+
     @Override
     public List<T> findByHQL(String hql, Object... params) {
         Query query = this.getSession().createQuery(hql);
@@ -75,6 +76,11 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
             query.setParameter(i, params);
         }
         return query.list();
+    }
+
+    @Override
+    public void saveOrUpdate(T t) {
+        this.getSession().saveOrUpdate(t);
     }
 
 

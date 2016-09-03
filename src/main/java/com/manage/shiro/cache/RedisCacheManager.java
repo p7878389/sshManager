@@ -1,7 +1,6 @@
 package com.manage.shiro.cache;
 
 import com.manage.redis.RedisClient;
-import com.manage.redis.SpringRedisCache;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.apache.shiro.cache.CacheManager;

@@ -8,11 +8,12 @@ import java.io.*;
 /**
  * Created by Administrator on 2016/6/27.
  */
-public class SerializeUtils {
+public enum  SerializeUtils {
+    INSTANCE;
 
     private final static Logger log = LoggerFactory.getLogger(SerializeUtils.class);
 
-    public static byte[] serialize(Object obj) {
+    public  byte[] serialize(Object obj) {
         if(obj==null){
             return new byte[0];
         }
@@ -25,13 +26,14 @@ public class SerializeUtils {
             bytes = bos.toByteArray();
             oos.close();
             bos.close();
+            deserialize(bytes);
         } catch (IOException ex) {
             log.error("byteArray to Object error", ex);
         }
         return bytes;
     }
 
-    public static Object deserialize(byte[] bytes) {
+    public  Object deserialize(byte[] bytes) {
         if(bytes==null){
             return null;
         }
@@ -49,4 +51,5 @@ public class SerializeUtils {
         }
         return obj;
     }
+
 }
