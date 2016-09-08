@@ -31,8 +31,8 @@ public class ResourceController {
      * 修改历史：<br/>
      * 1.[2016/9/2 16:42 ] 创建方法 by pxh
      */
-    @RequestMapping(path = "/initMenu", method = RequestMethod.GET)
-    public ResponseEntity<BaseResult> initMenu(HttpServletRequest request) {
+    @RequestMapping(path = "/initMenu/{id}", method = RequestMethod.GET)
+    public ResponseEntity<BaseResult> initMenu(HttpServletRequest request, @PathVariable Integer id) {
         User user = (User) request.getSession().getAttribute("admin");
         List<Resource> resources = resourceService.initMenu(user.getUserId());
         BaseResult baseResult = new BaseResult();

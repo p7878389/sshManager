@@ -72,6 +72,25 @@ Service.prototype = {
 			error: this.errorHandler
 		});
 	},
+	
+	//page
+	page: function (param, callback,tempId,tableId) {
+		var opt = $.extend({},this.defalut,callback);
+		$.ajax({
+			cache: false,
+			type: 'GET',
+			url: this.rootUrl + '?' + $.param(param),
+			dataType: "json",
+			success: function(data){
+				if(data.errorCode != 0 ){
+					opt.err(data);
+					return ;
+				}
+				opt.success(data,tempId,tableId);
+			},
+			error: this.errorHandler
+		});
+	},
 
 	getAsyncNotify: function (param, callback,alert) {
 		var opt = $.extend({},this.defalut,callback);
@@ -90,7 +109,7 @@ Service.prototype = {
 			error: this.errorHandler
 		});
 	},
-	
+
 	//find
 	getAllAsync: function (param, callback) {
 		var opt = $.extend({},this.defalut,callback);
@@ -155,7 +174,7 @@ Service.prototype = {
 			error: this.errorHandler
 		});
 	},
-	
+
 	getByIdAsync: function (id, data, callback) {
 		if (typeof data === "function") {
 			callback = data;

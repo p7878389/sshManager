@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface ResourceService {
 
-    public static final int MENU_TYPE=1;
+    public static final Integer MENU_TYPE=1;
 
     public Resource getResource(Integer id);
 

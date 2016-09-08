@@ -102,7 +102,7 @@ public class SpringRedisCache implements Cache {
                     return SerializeUtils.INSTANCE.deserialize(value);
                 }
             });
-            if (finalType != null && finalType.isInstance(object) && null != object) {
+            if (finalType.isInstance(object) && null != object) {
                 return (T) object;
             } else {
                 return null;

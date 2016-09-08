@@ -10,17 +10,17 @@
     <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
 
     <!-- 会话Cookie模板 -->
-    <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-        <constructor-arg value="sid"/>
-        <property name="httpOnly" value="true"/>
-        <property name="maxAge" value="-1"/>
-    </bean>
+    <!--<bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">-->
+    <!--<constructor-arg value="sid"/>-->
+    <!--<property name="httpOnly" value="true"/>-->
+    <!--<property name="maxAge" value="-1"/>-->
+    <!--</bean>-->
 
     <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <property name="name" value="shiro-redis"></property>
         <property name="httpOnly" value="true"/>
         <property name="maxAge" value="2592000"/><!-- 30天 -->
         <!-- 自定义cookie名称 -->
-        <property name="name" value="shiro-redis"></property>
     </bean>
 
     <!-- rememberMe管理器 -->
@@ -36,7 +36,7 @@
     </bean>
 
     <!--<bean id="sessionDao" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">-->
-        <!--<property name="sessionIdGenerator" ref="sessionIdGenerator"/>-->
+    <!--<property name="sessionIdGenerator" ref="sessionIdGenerator"/>-->
     <!--</bean>-->
 
     <!-- 会话验证调度器 检查会话是否过期 -->
@@ -56,7 +56,7 @@
         <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
         <property name="sessionDAO" ref="sessionDao"/>
         <property name="sessionIdCookieEnabled" value="true"/>
-        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+        <property name="sessionIdCookie" ref="rememberMeCookie"/>
     </bean>
 
 
@@ -64,7 +64,7 @@
         <!--单个realm使用realm,如果有多个realm，使用realms属性代替-->
         <property name="realm" ref="myRealm"/>
         <property name="sessionManager" ref="sessionManager"></property>
-        <property name="rememberMeManager" ref="rememberMeManager"/>
+        <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
     </bean>
 
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">

@@ -50,8 +50,9 @@ function dialogData(title, massage,callBack, type) {
     }
 
 }
-function dialogMsg(msg) {
+function dialogMsg(title,msg) {
     BootstrapDialog.show({
+        title: title,
         message: msg
     });
 

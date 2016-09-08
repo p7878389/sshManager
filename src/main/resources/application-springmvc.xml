@@ -69,7 +69,7 @@
             <mvc:exclude-mapping path="/js/**"/>
             <mvc:exclude-mapping path="/image/**"/>
             <mvc:exclude-mapping path="/login/loginIn"/>
-            <bean class="com.manage.Interceptor.DocInterceptor"></bean>
+            <bean class="com.manage.Interceptor.GlobalInterceptor"></bean>
         </mvc:interceptor>
     </mvc:interceptors>
 

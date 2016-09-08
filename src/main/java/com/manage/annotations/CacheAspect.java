@@ -38,7 +38,7 @@ public class CacheAspect {
     }
 
     @Pointcut(value = "execution(@CacheEvict * *.*(..))")
-    public void CacheEvict() {
+    public void cacheEvict() {
     }
 
     @Pointcut(value = "execution(@CachePut * *.*(..))")
@@ -66,19 +66,19 @@ public class CacheAspect {
                 return result;
             } catch (Throwable throwable) {
                 logger.error("cache param for key{} , fieldKey{} ", cacheable.key(), cacheable.fieldKey());
-                logger.error("cache Throwable",throwable);
+                logger.error("cache Throwable", throwable);
             }
         }
 
         String fieldKey = parseKey(cacheable.fieldKey(), method, joinPoint.getArgs());
 
-        String redisKey=cacheable.key()+fieldKey;
+        String redisKey = cacheable.key() + fieldKey;
 
         //获取方法的返回类型,让缓存可以返回正确的类型
         Class returnType = ((MethodSignature) joinPoint.getSignature()).getReturnType();
 
         //使用redis 的hash进行存取，易于管理
-        result = redisClient.getRedisObject( redisKey, returnType);
+        result = redisClient.getRedisObject(redisKey, returnType);
 
         if (result == null) {
             try {
@@ -96,7 +96,7 @@ public class CacheAspect {
      *
      * @param joinPoint
      */
-    @Around("CacheEvict()")
+    @Around("cacheEvict()")
     public void evict(ProceedingJoinPoint joinPoint) {
         /**
          * 判断是否开启redis缓存
@@ -107,7 +107,7 @@ public class CacheAspect {
         Method method = getMethod(joinPoint);
         CacheEvict cacheable = method.getAnnotation(CacheEvict.class);
         String fieldKey = parseKey(cacheable.fieldKey(), method, joinPoint.getArgs());
-        redisClient.delRedisObject( fieldKey);
+        redisClient.delRedisObject(fieldKey);
     }
 
 
@@ -130,7 +130,7 @@ public class CacheAspect {
         //获取方法的返回类型,让缓存可以返回正确的类型
         Class returnType = ((MethodSignature) joinPoint.getSignature()).getReturnType();
 
-        String redisKey=cacheable.key()+fieldKey;
+        String redisKey = cacheable.key() + fieldKey;
         //使用redis 的hash进行存取，易于管理
         result = redisClient.getRedisObject(redisKey, returnType);
 
@@ -138,7 +138,7 @@ public class CacheAspect {
             if (result == null) {
                 result = joinPoint.proceed();
                 Assert.notNull(fieldKey);
-                redisClient.setRedisObject(redisKey,result, cacheable.expireTime());
+                redisClient.setRedisObject(redisKey, result, cacheable.expireTime());
             } else {
                 redisClient.delRedisObject(redisKey);
                 result = joinPoint.proceed();
