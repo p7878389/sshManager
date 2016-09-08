@@ -166,7 +166,7 @@ public class RedisManager extends RedisClient {
         final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
         final byte[] fieldByte = SerializeUtils.INSTANCE.serialize(field);
         try {
-            Object result = jedis.hdel(keyByte, fieldByte);
+            jedis.hdel(keyByte, fieldByte);
         } finally {
             jedisPool.returnResource(jedis);
         }

@@ -29,6 +29,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Autowired
     private ResourceDaoImpl resourceDao;
 
+    @Autowired
     private UserService userService;
 
     @Override
@@ -53,30 +54,38 @@ public class ResourceServiceImpl implements ResourceService {
     public List<Resource> initMenu(int id) {
         List<Resource> resources = new ArrayList<Resource>();
 
-        User user = userService.findById(id);
-        Set urSet = user.getUserroles();
-        Iterator setUrIt = urSet.iterator();
-        while (setUrIt.hasNext()) {
-            Userrole userrole = (Userrole) setUrIt.next();
-            Role role = userrole.getRole();
-            Set resouSet = role.getRoleresources();
-            Iterator setresouIt = resouSet.iterator();
-            while (setresouIt.hasNext()) {
-                Resource resource = (Resource) setresouIt.next();
-                if (resource.getType() != MENU_TYPE) {
-                    continue;
-                }
-                if (!resources.contains(resource)) {
-                    resources.add(resource);
-                }
+//        User user = userService.findById(id);
+//        Set urSet = user.getUserroles();
+//        Iterator setUrIt = urSet.iterator();
+//        while (setUrIt.hasNext()) {
+//            Userrole userrole = (Userrole) setUrIt.next();
+//            Role role = userrole.getRole();
+//            Set resouSet = role.getRoleresources();
+//            Iterator setresouIt = resouSet.iterator();
+//            while (setresouIt.hasNext()) {
+//                Resource resource = (Resource) setresouIt.next();
+//                if (resource.getType() != MENU_TYPE) {
+//                    continue;
+//                }
+//                if (!resources.contains(resource)) {
+//                    resources.add(resource);
+//                }
+//            }
+//        }
+        List<Resource> resourceList = resourceDao.findAll(new Resource());
+        Iterator it = resourceList.iterator();
+        while (it.hasNext()) {
+            Resource r = (Resource) it.next();
+            if (!MENU_TYPE.equals(r.getType())) {
+                it.remove();
             }
         }
-        return resources;
+        return resourceList;
     }
 
     @Override
     public List<Resource> findAllResource() {
-        return resourceDao.findAllResource();
+        return resourceDao.findAll(new Resource());
     }
 
     public ResourceDaoImpl getResourceDao() {

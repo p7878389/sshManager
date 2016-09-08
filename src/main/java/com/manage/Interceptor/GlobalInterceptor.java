@@ -5,6 +5,7 @@ import com.manage.controller.LoginController;
 import com.manage.redis.RedisClient;
 import com.manage.util.StringUtil;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 /***
  * 拦截器  判断用户是否登录
  */
-public class DocInterceptor extends HandlerInterceptorAdapter {
-    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
+public class GlobalInterceptor extends HandlerInterceptorAdapter {
+    private static final Logger log = LoggerFactory.getLogger( LoginController.class );
 
     private static final String sessionKey = "shiro_session:";
 
@@ -32,22 +33,15 @@ public class DocInterceptor extends HandlerInterceptorAdapter {
 
         String requestUri = request.getRequestURI();
         String contextPath = request.getContextPath();
-        String url = requestUri.substring(contextPath.length());
+        String url = requestUri.substring( contextPath.length() );
 
-        log.info("requestUri:" + requestUri);
-        log.info("contextPath:" + contextPath);
-        log.info("url:" + url);
+        log.info( "requestUri:" + requestUri );
+        log.info( "contextPath:" + contextPath );
+        log.info( "url:" + url );
 
-        //判断是否启用redis管理shiro缓存
-        Object sessionInfo;
-        if(redisClient.isShiroCache()){
-            sessionInfo= request.getSession().getId();
-            sessionInfo = redisClient.getSession(sessionKey + sessionInfo);
-        }else{
-            sessionInfo=request.getSession().getAttribute("user");
-        }
-        if (sessionInfo == null || StringUtil.isNull(sessionInfo.toString())) {
-            response.sendRedirect("../admin/login.html");
+        Object sessionInfo = request.getSession().getAttribute( "admin" );
+        if (sessionInfo == null || StringUtil.isNull( sessionInfo.toString() )) {
+            response.sendRedirect( request.getContextPath()+"/admin/login.html" );
             return false;
         }
         return true;

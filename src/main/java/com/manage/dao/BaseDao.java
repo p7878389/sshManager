@@ -1,6 +1,10 @@
 package com.manage.dao;
 
+import com.manage.vo.Page;
+import org.hibernate.criterion.Criterion;
+
 import java.util.List;
+import java.util.Map;
 
 public interface BaseDao<T,PK> {
 
@@ -15,5 +19,9 @@ public interface BaseDao<T,PK> {
     public List<T> findByHQL(String hql, Object... params);
 
     public void saveOrUpdate(T t);
+
+    public List<T> findAll(T t);
+
+    public Page<T> pageQuery(Page<T> page, List<Criterion> criterionList, T t);
 
 }

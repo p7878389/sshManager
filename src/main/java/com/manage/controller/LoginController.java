@@ -43,7 +43,7 @@ public class LoginController {
             Subject subject = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassWord());
             //是否记住密码
-            token.setRememberMe(true);
+            //token.setRememberMe(true);
             subject.login(token);
             logger.info("session---" + subject.getSession().getId());
             request.getSession().setAttribute("admin", user);

@@ -1,5 +1,6 @@
-package com.manage.dao;
+package com.manage.dao.admin;
 
+import com.manage.dao.BaseDao;
 import com.manage.entity.Userrole;
 
 /**

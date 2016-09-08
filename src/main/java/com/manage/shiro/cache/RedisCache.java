@@ -8,13 +8,14 @@ import org.apache.shiro.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 
 /**
  * Created by Administrator on 2016/6/27.
  */
-public class RedisCache<K,V> implements Cache<K,V> {
+public class RedisCache<K, V> implements Cache<K, V> {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -33,6 +34,7 @@ public class RedisCache<K,V> implements Cache<K,V> {
     /**
      * Returns the Redis session keys
      * prefix.
+     *
      * @return The prefix
      */
     public String getKeyPrefix() {
@@ -42,6 +44,7 @@ public class RedisCache<K,V> implements Cache<K,V> {
     /**
      * Sets the Redis sessions key
      * prefix.
+     *
      * @param keyPrefix The prefix
      */
     public void setKeyPrefix(String keyPrefix) {
@@ -61,7 +64,8 @@ public class RedisCache<K,V> implements Cache<K,V> {
     /**
      * Constructs a cache instance with the specified
      * Redis manager and using a custom key prefix.
-     * @param cache The cache manager instance
+     *
+     * @param cache  The cache manager instance
      * @param prefix The Redis key prefix
      */
     public RedisCache(ShiroRedisCache cache, String prefix) {
@@ -74,18 +78,24 @@ public class RedisCache<K,V> implements Cache<K,V> {
 
     /**
      * 获得byte[]型的key
+     *
      * @param key
      * @return
      */
     private byte[] getByteKey(K key) {
-        if (key instanceof String) {
-            String preKey = this.keyPrefix + key;
-            return preKey.getBytes();
-        } else if(key instanceof PrincipalCollection){
-            String preKey = this.keyPrefix + key.toString();
-            return preKey.getBytes();
-        }else{
-            return SerializeUtils.INSTANCE.serialize(key);
+        try {
+            if (key instanceof String) {
+                String preKey = this.keyPrefix + key;
+                return preKey.getBytes("UTF-8");
+            } else if (key instanceof PrincipalCollection) {
+                String preKey = this.keyPrefix + key.toString();
+                return preKey.getBytes();
+            } else {
+                return SerializeUtils.INSTANCE.serialize(key);
+            }
+        } catch (UnsupportedEncodingException e) {
+            logger.error("string to byte for key:{}", key, e);
+            return new byte[1024];
         }
     }
 
@@ -97,7 +107,7 @@ public class RedisCache<K,V> implements Cache<K,V> {
                 return null;
             } else {
                 byte[] rawValue = cache.get(getByteKey(key));
-                 V value = (V) SerializeUtils.INSTANCE.deserialize(rawValue);
+                V value = (V) SerializeUtils.INSTANCE.deserialize(rawValue);
                 return value;
             }
         } catch (Throwable t) {
@@ -105,6 +115,7 @@ public class RedisCache<K,V> implements Cache<K,V> {
         }
 
     }
+
     public String getStr(String key) throws CacheException {
         logger.debug("根据key从Redis中获取对象 key [" + key + "]");
         try {
@@ -140,7 +151,7 @@ public class RedisCache<K,V> implements Cache<K,V> {
         }
     }
 
-    public String put(String key,String value, int expire) throws CacheException {
+    public String put(String key, String value, int expire) throws CacheException {
         logger.debug("根据key从存储 key [" + key + "]");
         try {
             cache.set(key, value, expire);
@@ -186,8 +197,9 @@ public class RedisCache<K,V> implements Cache<K,V> {
     @Override
     public int size() {
         try {
-            Long longSize = new Long(cache.dbSize());
-            return longSize.intValue();
+            //Long longSize = new Long(cache.dbSize());
+            return cache.dbSize().intValue();
+            // return longSize.intValue();
         } catch (Throwable t) {
             throw new CacheException(t);
         }

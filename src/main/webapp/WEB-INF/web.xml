@@ -48,18 +48,29 @@
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 
-    <!--<filter>-->
-        <!--<filter-name>openSession</filter-name>-->
-        <!--<filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>-->
-        <!--<init-param>-->
-            <!--<param-name>singleSession</param-name>-->
-            <!--<param-value>false</param-value>-->
-        <!--</init-param>-->
-    <!--</filter>-->
-    <!--<filter-mapping>-->
-        <!--<filter-name>openSession</filter-name>-->
-        <!--<url-pattern>/*</url-pattern>-->
-    <!--</filter-mapping>-->
+    <!-- Spring的OpenSessionInView实现 -->
+    <filter>
+        <filter-name>openSessionInViewFilter</filter-name>
+        <filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter
+        </filter-class>
+        <!-- singleSession默认为true,若设为false则等于没用OpenSessionInView 。所以默认可以不写-->
+        <init-param>
+            <param-name>singleSession</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <!--
+        指定org.springframework.orm.hibernate3.LocalSessionFactoryBean在spring配置文件中的名称,默认值为sessionFactory。 如果LocalSessionFactoryBean在spring中的名称不是sessionFactory,该参数一定要指定,否则会出现找不到sessionFactory的例外。所以默认可以不写
+        -->
+        <init-param>
+            <param-name>sessionFactoryBean</param-name>
+            <param-value>sessionFactory</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>openSessionInViewFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
 
     <!-- shiro 安全过滤器 -->
     <filter>

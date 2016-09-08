@@ -10,6 +10,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * redis初始化
  */
@@ -39,7 +41,7 @@ public class RedisClient {
     public RedisClient() {
     }
 
-    public RedisClient(JedisPoolConfig jedisPoolConfig, String host, int port, String passWord, int expire, boolean flag,boolean shiroCache) {
+    public RedisClient(JedisPoolConfig jedisPoolConfig, String host, int port, String passWord, int expire, boolean flag, boolean shiroCache) {
         /**
          * 判断是否请用redis缓存
          */
@@ -51,7 +53,7 @@ public class RedisClient {
             this.port = port;
             this.flag = flag;
             this.expire = expire;
-            this.shiroCache=shiroCache;
+            this.shiroCache = shiroCache;
             try {
                 this.jedisPool = new JedisPool(this.jedisPoolConfig, this.host, this.port, this.expire, this.passWord);
                 log.info("redis init success");
@@ -69,11 +71,11 @@ public class RedisClient {
      * @param key
      * @return
      */
-    public Session getSession(String key) {
+    public Session getSession(String key) throws UnsupportedEncodingException {
         Jedis jedis = jedisPool.getResource();
         Session session = null;
         try {
-            final byte[] keyByte = key.getBytes();
+            final byte[] keyByte = key.getBytes("UTF-8");
             final byte[] valueByte = jedis.get(keyByte);
             if (valueByte != null) {
                 session = (Session) SerializeUtils.INSTANCE.deserialize(valueByte);
@@ -172,7 +174,7 @@ public class RedisClient {
         Jedis jedis = jedisPool.getResource();
         final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
         final byte[] fieldByte = SerializeUtils.INSTANCE.serialize(field);
-        final byte[] objByte = SerializeUtils.INSTANCE.serialize (o);
+        final byte[] objByte = SerializeUtils.INSTANCE.serialize(o);
         try {
             jedis.hset(keyByte, fieldByte, objByte);
             if (expire != 0) {
@@ -201,7 +203,7 @@ public class RedisClient {
             final byte[] keyByte = SerializeUtils.INSTANCE.serialize(key);
             final byte[] fieldByte = SerializeUtils.INSTANCE.serialize(field);
             Object object = null;
-            object = SerializeUtils.INSTANCE.deserialize (jedis.hget(keyByte, fieldByte));
+            object = SerializeUtils.INSTANCE.deserialize(jedis.hget(keyByte, fieldByte));
             if (clzz != null && clzz.isInstance(object) && null != object) {
                 return (T) object;
             } else {
@@ -233,11 +235,11 @@ public class RedisClient {
     }
 
 
-    public <T> T getRedisObject(String key,Class<T> clzz){
+    public <T> T getRedisObject(String key, Class<T> clzz) {
         Jedis jedis = jedisPool.getResource();
         try {
-            String objStr=jedis.get(key);
-            return (T) JsonUtil.INSTANCE.jsonStrTObject(objStr,clzz);
+            String objStr = jedis.get(key);
+            return (T) JsonUtil.INSTANCE.jsonStrTObject(objStr, clzz);
         } finally {
             jedisPool.returnResource(jedis);
         }
@@ -245,9 +247,9 @@ public class RedisClient {
 
     public void setRedisObject(String key, Object o, int expire) {
         Jedis jedis = jedisPool.getResource();
-        String objJson=JsonUtil.INSTANCE.objectToJson(o);
+        String objJson = JsonUtil.INSTANCE.objectToJson(o);
         try {
-            jedis.set(key,objJson);
+            jedis.set(key, objJson);
             if (expire != 0) {
                 jedis.expire(key, expire);
             } else {

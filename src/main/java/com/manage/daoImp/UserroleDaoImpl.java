@@ -1,6 +1,6 @@
 package com.manage.daoImp;
 
-import com.manage.dao.UserroleDao;
+import com.manage.dao.admin.UserroleDao;
 import com.manage.entity.Userrole;
 
 /**

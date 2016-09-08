@@ -78,6 +78,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- springmvc test -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
 
         <!-- Spring -->
         <dependency>
