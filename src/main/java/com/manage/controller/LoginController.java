@@ -18,9 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
-/**
- * Created by Administrator on 2016/6/28.
- */
 @Controller
 @RequestMapping(value = "/login")
 public class LoginController {
@@ -39,9 +36,9 @@ public class LoginController {
     @RequestMapping(value = "/loginIn", method = RequestMethod.POST)
     public ResponseEntity<BaseResult> login(@RequestBody User user, HttpServletRequest request) {
         BaseResult result = new BaseResult();
-        user = userService.userLogin(user);
+        user = userService.findByUser(user);
         if (user == null) {
-            result = ErrorCodeInfo.getBaseResult(ErrorCodeInfo.USER_PASSWORD_ERROR);
+            result = ErrorCodeInfo.INSTANCE.getBaseResult(ErrorCodeInfo.USER_PASSWORD_ERROR);
         } else {
             Subject subject = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassWord());
@@ -71,7 +68,7 @@ public class LoginController {
                 subject.logout();
             }
         } catch (Exception e) {
-            result = ErrorCodeInfo.getBaseResult(ErrorCodeInfo.USER_LOGOUT_ERROR);
+            result = ErrorCodeInfo.INSTANCE.getBaseResult(ErrorCodeInfo.USER_LOGOUT_ERROR);
             logger.error("用户注销失败", e);
         }
         return ResponseEntity.ok().body(result);

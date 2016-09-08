@@ -50,7 +50,6 @@ public enum  ErrorCodeInfo {
         errorMsg.put(USER_SAVE_ERROR, "用户新增失败");
         errorMsg.put(USER_UPDATE_ERROR, "用户保存失败");
         errorMsg.put(USER_DELETE_ERROR, "用户删除失败");
-
     }
 
     /**
@@ -59,7 +58,7 @@ public enum  ErrorCodeInfo {
      * @param errorCode
      * @return
      */
-    public static String getMsg(int errorCode) {
+    public  String getMsg(int errorCode) {
         return errorMsg.get(errorCode);
     }
 
@@ -70,7 +69,7 @@ public enum  ErrorCodeInfo {
      * @param errorCode
      * @return
      */
-    public static BaseResult getBaseResult(int errorCode) {
+    public  BaseResult getBaseResult(int errorCode) {
         BaseResult result = new BaseResult();
         result.setMsg(errorMsg.get(errorCode));
         result.setErrorCode(errorCode);

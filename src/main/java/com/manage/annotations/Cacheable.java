@@ -12,5 +12,5 @@ public @interface Cacheable {
 
     String key();
     String fieldKey() ;
-    int expireTime() default 1800000;
+    int expireTime() default 1800;
 }

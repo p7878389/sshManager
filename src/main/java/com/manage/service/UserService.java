@@ -20,12 +20,6 @@ public interface UserService {
      */
     public User findById(Integer id);
 
-    /**
-     * 用户登录   redis记录用户数量
-     * @param user
-     * @return
-     */
-    public User userLogin(User user);
 
     public BaseResult saveOrUpdate(User user);
 }

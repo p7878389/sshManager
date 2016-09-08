@@ -15,9 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Created by Administrator on 2016/6/26.
- */
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
@@ -27,18 +24,8 @@ public class UserServiceImpl implements UserService {
     private UserDaoImpl userDaoImpl;
 
     @Override
-    public User findByUser(User user) {
-        List<User> users = userDaoImpl.getUser(user);
-        if (users.size() > 0) {
-            return users.get(0);
-        }
-        return null;
-    }
-
-
-    @Override
     @Cacheable(key = "userLogin", fieldKey = "#user.getUserName()")
-    public User userLogin(User user) {
+    public User findByUser(User user) {
         List<User> users = userDaoImpl.getUser(user);
         if (users.size() > 0) {
             return users.get(0);
@@ -54,7 +41,7 @@ public class UserServiceImpl implements UserService {
             result.setErrorCode(0);
         }catch (Exception e){
             log.error("saveOrUpdate for:{} user{}", JsonUtil.INSTANCE.objectToJson(user),e);
-            result= ErrorCodeInfo.getBaseResult(ErrorCodeInfo.USER_UPDATE_ERROR);
+            result= ErrorCodeInfo.INSTANCE.getBaseResult(ErrorCodeInfo.USER_UPDATE_ERROR);
         }
         return result;
     }
