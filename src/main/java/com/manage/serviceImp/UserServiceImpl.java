@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
             result.setErrorCode( 0 );
         } catch (Exception e) {
             log.error( "saveOrUpdate for:{} user{}", JsonUtil.INSTANCE.objectToJson( user ), e );
-            result = ErrorCodeInfo.getBaseResult( ErrorCodeInfo.USER_UPDATE_ERROR );
+            result = ErrorCodeInfo.INSTANCE.getBaseResult( ErrorCodeInfo.USER_UPDATE_ERROR );
         }
         return result;
     }
