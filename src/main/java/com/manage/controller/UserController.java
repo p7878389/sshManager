@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Map;
 
+import static org.apache.shiro.web.filter.mgt.DefaultFilter.user;
+
 /**
  * 用户信息
  */
@@ -36,6 +38,19 @@ public class UserController {
         User user = userService.findById( id );
         BaseResult result = new BaseResult();
         result.setObject( user );
+        return ResponseEntity.ok().body( result );
+    }
+
+    @RequestMapping(path = "/saveUser", method = RequestMethod.POST)
+    public ResponseEntity<BaseResult> saveUser(@RequestBody User user) {
+        BaseResult result = userService.saveOrUpdate( user );
+        return ResponseEntity.ok().body( result );
+    }
+
+
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<BaseResult> deleteUser(@PathVariable Integer id) {
+        BaseResult result = userService.deleteUser( id );
         return ResponseEntity.ok().body( result );
     }
 

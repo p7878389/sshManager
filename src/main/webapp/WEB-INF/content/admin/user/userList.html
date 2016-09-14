@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head lang="zh-CN">
     <meta charset="UTF-8">
@@ -19,10 +18,10 @@
                 <p class="panel-heading">用户列表</p>
                 <div class="panel-body">
                     <div class="row">
-                        <div class="ml-10">
+                        <div class="query">
                             <form class="form-inline" role="form">
                                 <div class="row">
-                                    <div class="col-lg-4 col-lg-offset-1">
+                                    <div class="col-lg-4 ml-10">
                                         <div class="form-group">
                                             <label for="userName">用户名：</label>
                                             <input type="text" class="form-control" id="userName">
@@ -38,15 +37,18 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-lg-offset-1 col-lg-2">
-                                       <div class="btn btn-primary" id="querUser">查询<span class="glyphicon glyphicon-search"></span></div>
+                                    <div class="col-lg-offset-1 col-lg-3">
+                                        <div class="btn btn-primary" id="querUser">查询<span
+                                                class="glyphicon glyphicon-search"></span></div>
+                                        <button type="button" class="btn btn-primary ml-10" id="userAdd">新增<span
+                                                class="glyphicon glyphicon-plus"></span></button>
                                     </div>
                                 </div>
                             </form>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="div-tab mt-40">
+                        <div class=" div-tab">
                             <table class="table text-center" id="userListTab"></table>
                         </div>
                     </div>
@@ -58,14 +60,18 @@
                         </div>
                         <div class="col-lg-5 ">
                             <div id="pager">
-                                <nav>
+                                <!--<nav>
                                     <ul class="pager">
-                                        <li onclick="firstPage()"><a href="#">首页</a></li>
-                                        <li onclick="previousPage()"><a href="#">上一页</a></li>
-                                        <li onclick="nextPage()"><a href="#">下一页</a></li>
-                                        <li onclick="lastPage()"><a href="#">末页</a></li>
+                                        <li onclick="userList.firstPage()"><a href="#">首页</a></li>
+                                        <li onclick="userList.previousPage()"><a href="#">上一页</a></li>
+                                        <li onclick="userList.nextPage()"><a href="#">下一页</a></li>
+                                        <li onclick="userList.lastPage()"><a href="#">末页</a></li>
                                     </ul>
-                                </nav>
+                                </nav>-->
+                                <button type="button" class="btn btn-warning btn-sm" onclick="userList.firstPage()">首页</button>
+                                <button type="button" class="btn btn-warning btn-sm" onclick="userList.previousPage()">上一页</button>
+                                <button type="button" class="btn btn-warning btn-sm" onclick="userList.nextPage()">下一页</button>
+                                <button type="button" class="btn btn-warning btn-sm" onclick="userList.lastPage()">末页</button>
                             </div>
                         </div>
                     </div>
@@ -102,7 +108,7 @@
         <td>
             <span class="btn btn-primary btn-sm" userTabId="{{user.userId}}">修改<span
                     class="glyphicon glyphicon-pencil"></span></span>
-            <span class="btn btn-danger btn-sm" userTabId="{{user.userId}}">删除<span
+            <span class="btn btn-danger btn-sm" onclick='userDelete({{user.userId}})'>删除<span
                     class="glyphicon glyphicon-trash"></span></span>
         </td>
     </tr>

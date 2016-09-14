@@ -31,6 +31,8 @@ public interface UserService {
      */
     public User userLogin(User user);
 
+    public BaseResult deleteUser(Integer id);
+
     public BaseResult saveOrUpdate(User user);
 
     public Page<User> pageQuery(Page<User> page,User user);

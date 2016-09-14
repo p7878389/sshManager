@@ -6,7 +6,7 @@ import org.hibernate.criterion.Criterion;
 import java.util.List;
 import java.util.Map;
 
-public interface BaseDao<T,PK> {
+public interface BaseDao<T, PK> {
 
     public void save(T entity);
 

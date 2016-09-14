@@ -54,7 +54,7 @@ public class ResourceController {
         BaseResult result = new BaseResult();
         Resource resource = resourceService.getResource(id);
         if (resource == null) {
-            result = ErrorCodeInfo.getBaseResult(ErrorCodeInfo.RESOURCE_NULLPOINTER);
+            result = ErrorCodeInfo.INSTANCE.getBaseResult(ErrorCodeInfo.RESOURCE_NULLPOINTER);
         } else {
             result.setObject(resource);
         }

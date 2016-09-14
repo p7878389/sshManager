@@ -41,7 +41,7 @@ public class LoginController {
         BaseResult result = new BaseResult();
         user = userService.userLogin(user);
         if (user == null) {
-            result = ErrorCodeInfo.getBaseResult(ErrorCodeInfo.USER_PASSWORD_ERROR);
+            result = ErrorCodeInfo.INSTANCE.getBaseResult(ErrorCodeInfo.USER_PASSWORD_ERROR);
         } else {
             Subject subject = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(user.getUserName(), user.getPassWord());
@@ -71,7 +71,7 @@ public class LoginController {
                 subject.logout();
             }
         } catch (Exception e) {
-            result = ErrorCodeInfo.getBaseResult(ErrorCodeInfo.USER_LOGOUT_ERROR);
+            result = ErrorCodeInfo.INSTANCE.getBaseResult(ErrorCodeInfo.USER_LOGOUT_ERROR);
             logger.error("用户注销失败", e);
         }
         return ResponseEntity.ok().body(result);

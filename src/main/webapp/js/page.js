@@ -1,6 +1,6 @@
-function pager(param, url, tempId, tableId) {
-    pageParam(param);
-    pageService = new Service(url);
+function
+pager(param, url, tempId, tableId) {
+   var pageService = new Service(url);
     pageService.page(param, {success: pageCallBack}, tempId, tableId);
 }
 

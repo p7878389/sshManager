@@ -1,7 +1,7 @@
 /**
  * Created by Administrator on 2016/9/2.
  */
-function dialogData(title, massage,callBack, type) {
+function dialogData(title, massage, callBack, type) {
     if (typeof(type) == 'undefined') {
         BootstrapDialog.show({
             title: title,
@@ -48,12 +48,29 @@ function dialogData(title, massage,callBack, type) {
             }]
         });
     }
-
 }
-function dialogMsg(title,msg) {
+
+function addOrUpdateDialog(title, message) {
+    return dialogObj = BootstrapDialog.show({
+        title: title,
+        message: function () {
+            return $(message);
+        }
+    });
+}
+
+function addOrUpdateDialog(title, html) {
+    return dialogObj = BootstrapDialog.show({
+        title: title,
+        message: $('<div></div>').load(html)
+    });
+}
+
+function dialogMsg(title, msg) {
     BootstrapDialog.show({
         title: title,
         message: msg
     });
 
 }
+

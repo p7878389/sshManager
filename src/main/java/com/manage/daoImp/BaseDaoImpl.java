@@ -60,7 +60,7 @@ public class BaseDaoImpl<T, PK extends Serializable> implements BaseDao<T, PK> {
 
     @Override
     public void delete(PK id) {
-        this.getSession().delete( this.findById( id ) );
+        this.getSession().delete( this.getSession().get( clazz, id ) );
     }
 
     @Override

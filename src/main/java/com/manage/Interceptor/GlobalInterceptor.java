@@ -3,10 +3,10 @@ package com.manage.Interceptor;
 
 import com.manage.controller.LoginController;
 import com.manage.redis.RedisClient;
+import com.manage.util.BaseResult;
+import com.manage.util.ErrorCodeInfo;
+import com.manage.util.JsonUtil;
 import com.manage.util.StringUtil;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +15,15 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+
+import static com.manage.util.ErrorCodeInfo.USER_SESSION_INVALID;
 
 /***
  * 拦截器  判断用户是否登录
  */
 public class GlobalInterceptor extends HandlerInterceptorAdapter {
     private static final Logger log = LoggerFactory.getLogger( LoginController.class );
-
-    private static final String sessionKey = "shiro_session:";
 
     @Autowired
     private RedisClient redisClient;
@@ -41,7 +42,18 @@ public class GlobalInterceptor extends HandlerInterceptorAdapter {
 
         Object sessionInfo = request.getSession().getAttribute( "admin" );
         if (sessionInfo == null || StringUtil.isNull( sessionInfo.toString() )) {
-            response.sendRedirect( request.getContextPath()+"/admin/login.html" );
+            if (request.getHeader( "x-requested-with" ) != null
+                    && request.getHeader( "x-requested-with" ).equalsIgnoreCase( "XMLHttpRequest" )) {
+                //是ajax请求，则返回个消息给前台
+                PrintWriter printWriter = response.getWriter();
+                BaseResult result = ErrorCodeInfo.INSTANCE.getBaseResult( ErrorCodeInfo.USER_SESSION_INVALID );
+                printWriter.print( JsonUtil.INSTANCE.objectToJson( result ) );
+                printWriter.flush();
+                printWriter.close();
+            } else {
+                //不是ajax请求，则直接跳转页面
+                response.sendRedirect( request.getContextPath() + "/admin/login.html" );
+            }
             return false;
         }
         return true;

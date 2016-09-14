@@ -37,14 +37,14 @@ $(function () {
         }, {success: loginCallback}, "#accountLogin");
     });
     //登录回调函数
-    function loginCallback(data){
-        if(data.errorCode==0){
-            sessionStorage.setItem("userName",data.object.userName);
-            sessionStorage.setItem("userId",data.object.userId);
-            window.location.href = "../admin/index-home.html"+"?_"+(new Date().valueOf());;
-        }else{
-            $(".alert-danger").html(data.msg);
-            $(".alert-danger").show();
+    function loginCallback(data) {
+        if (data.errorCode == 0) {
+            sessionStorage.setItem("userName", data.object.userName);
+            sessionStorage.setItem("userId", data.object.userId);
+            window.location.href = "../admin/index-home.html" + "?_" + (new Date().valueOf());
+            ;
+        } else {
+            $.scojs_message(data.msg, $.scojs_message.TYPE_WARNING);
         }
     }
 })

@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/6/26.
  */
-public enum  ErrorCodeInfo {
+public enum ErrorCodeInfo {
 
     INSTANCE;
 
@@ -23,6 +23,7 @@ public enum  ErrorCodeInfo {
     public static final int USER_SAVE_ERROR = 100004;
     public static final int USER_UPDATE_ERROR = 100005;
     public static final int USER_DELETE_ERROR = 100006;
+    public static final int USER_SESSION_INVALID = 100007;
 
 
     /***
@@ -31,26 +32,37 @@ public enum  ErrorCodeInfo {
     public static final int RESOURCE_NULLPOINTER = 200001;
 
 
+    /***
+     * 系统错误
+     */
+
+
     static {
         userRelevant();
         /**
          * 菜单
          */
-        errorMsg.put(RESOURCE_NULLPOINTER, "找不到该资源");
+        errorMsg.put( RESOURCE_NULLPOINTER, "找不到该资源" );
     }
 
     /***
      * 用户相关错误信息
      */
     public static void userRelevant() {
-        errorMsg.put(SHIRO_ERROR, "shiro未知错误");
-        errorMsg.put(USER_NULLPOINTER, "用户不存在");
-        errorMsg.put(USER_PASSWORD_ERROR, "用户名或密码错误");
-        errorMsg.put(USER_LOGOUT_ERROR, "用户注销失败");
-        errorMsg.put(USER_SAVE_ERROR, "用户新增失败");
-        errorMsg.put(USER_UPDATE_ERROR, "用户保存失败");
-        errorMsg.put(USER_DELETE_ERROR, "用户删除失败");
+        errorMsg.put( SHIRO_ERROR, "shiro未知错误" );
+        errorMsg.put( USER_NULLPOINTER, "用户不存在" );
+        errorMsg.put( USER_PASSWORD_ERROR, "用户名或密码错误" );
+        errorMsg.put( USER_LOGOUT_ERROR, "用户注销失败" );
+        errorMsg.put( USER_SAVE_ERROR, "用户新增失败" );
+        errorMsg.put( USER_UPDATE_ERROR, "用户保存失败" );
+        errorMsg.put( USER_DELETE_ERROR, "用户删除失败" );
+        errorMsg.put( USER_SESSION_INVALID, "用户登录已过期，请重新登录！" );
+    }
 
+    /***
+     * 用户相关错误信息
+     */
+    public static void systemRelevant() {
     }
 
     /**
@@ -60,7 +72,7 @@ public enum  ErrorCodeInfo {
      * @return
      */
     public static String getMsg(int errorCode) {
-        return errorMsg.get(errorCode);
+        return errorMsg.get( errorCode );
     }
 
 
@@ -70,10 +82,10 @@ public enum  ErrorCodeInfo {
      * @param errorCode
      * @return
      */
-    public static BaseResult getBaseResult(int errorCode) {
+    public BaseResult getBaseResult(int errorCode) {
         BaseResult result = new BaseResult();
-        result.setMsg(errorMsg.get(errorCode));
-        result.setErrorCode(errorCode);
+        result.setMsg( errorMsg.get( errorCode ) );
+        result.setErrorCode( errorCode );
         return result;
     }
 }

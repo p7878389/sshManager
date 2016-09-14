@@ -8,7 +8,6 @@ import com.manage.util.BaseResult;
 import com.manage.util.ErrorCodeInfo;
 import com.manage.util.JsonUtil;
 import com.manage.vo.Page;
-import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 @Transactional
@@ -48,6 +46,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public BaseResult deleteUser(Integer id) {
+        BaseResult result = new BaseResult();
+        try {
+            userDaoImpl.delete( id );
+        } catch (Exception e) {
+            log.error( "delete user error for: id{}", id, e );
+            result = ErrorCodeInfo.INSTANCE.getBaseResult( ErrorCodeInfo.USER_DELETE_ERROR );
+        }
+        return result;
+    }
+
+    @Override
     public BaseResult saveOrUpdate(User user) {
         BaseResult result = new BaseResult();
         try {
@@ -55,7 +65,7 @@ public class UserServiceImpl implements UserService {
             result.setErrorCode( 0 );
         } catch (Exception e) {
             log.error( "saveOrUpdate for:{} user{}", JsonUtil.INSTANCE.objectToJson( user ), e );
-            result = ErrorCodeInfo.getBaseResult( ErrorCodeInfo.USER_UPDATE_ERROR );
+            result = ErrorCodeInfo.INSTANCE.getBaseResult( ErrorCodeInfo.USER_UPDATE_ERROR );
         }
         return result;
     }
