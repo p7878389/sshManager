@@ -60,7 +60,7 @@ public class UserController {
      * @param user
      * @return
      */
-    @RequestMapping(path = "updateUser", method = RequestMethod.POST)
+    @RequestMapping(path = "/updateUser", method = RequestMethod.POST)
     public ResponseEntity<BaseResult> updateUser(@RequestBody User user) {
         BaseResult result = userService.saveOrUpdate( user );
         return ResponseEntity.ok().body( result );

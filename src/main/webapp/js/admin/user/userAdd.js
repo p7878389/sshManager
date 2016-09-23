@@ -23,13 +23,9 @@ $("#saveUser").click(function () {
 function userAddCallBack(data) {
     if (data.errorCode == 0) {
         dialogObj.close();
-        dialogMsg('提示', '用户新增成功');
-        var $form = $("#userAddForm");
-        var passWord = $form.find('[id="passWord"]').val('');
-        var userName = $form.find('[id="userName"]').val('');
-        var salt = $form.find('[id="salt"]').val('');
-        var state = $form.find('[id="state"]').val('')
-        userList.firstPage();
+        $.scojs_message("用户新增成功",$.scojs_message.TYPE_OK);
+        $("#userAddForm")[0].reset();
+        userList.queryUser();
     } else {
         $.scojs_message(data.msg, $.scojs_message.TYPE_ERROR);
     }

@@ -1,20 +1,29 @@
+var diaObj;
 var userList = {
     //分页参数
     pageParam: function () {
         var userName = $("#userName").val();
         var state = $("#state").val();
         var salt = $("#salt").val();
-        var param = {"userName": userName, "state": state, "salt": salt, "pageSize": "1"};
+        var pageParam = {"userName": userName, "state": state, "salt": salt};
+        var param = {};
+        param.queryParam = pageParam;
+        param.url = "../user/pageUser";
+        param.tempId = "userPageTemp";
+        param.tableId = "userListTab";
         return param;
+    },
+
+    queryUser: function () {
+        var param = this.pageParam();
+        pagerService.queryPage(param);
     },
 
     firstPage: function () {
         var param = this.pageParam();
         var currentPage = Number($("#currentPage").html());
-        if (currentPage == 1) {
-            $.scojs_message("已经是第一页了！", $.scojs_message.TYPE_WARNING);
-        }
-        pager(param, '../user/pageUser', 'userTableTemp', 'userListTab');
+        param.currentPage = currentPage
+        pagerService.firstPage(param);
     },
 
     //下一页
@@ -22,26 +31,17 @@ var userList = {
         var param = this.pageParam();
         var totalPage = Number($("#totalPage").html());
         var currentPage = Number($("#currentPage").html());
-        if (totalPage > currentPage) {
-            param.currentPage = (currentPage + 1).toString();
-            pager(param, '../user/pageUser', 'userTableTemp', 'userListTab');
-        } else {
-            //dialogMsg("警告", "已经是最后一页了");
-            $.scojs_message("已经是最后一页了！", $.scojs_message.TYPE_WARNING);
-        }
+        param.totalPage = totalPage;
+        param.currentPage = currentPage;
+        pagerService.nextPage(param);
     },
 
     //上一页
     previousPage: function () {
         var param = this.pageParam();
         var currentPage = Number($("#currentPage").html());
-        if (currentPage > 1) {
-            param.currentPage = (currentPage - 1).toString();
-            pager(param, '../user/pageUser', 'userTableTemp', 'userListTab');
-        } else {
-            $.scojs_message("已经是第一页了！", $.scojs_message.TYPE_WARNING);
-            //dialogMsg("警告", "已经是第一页了");
-        }
+        param.currentPage = currentPage;
+        pagerService.previousPage(param);
     },
 
     //最后一页
@@ -49,39 +49,60 @@ var userList = {
         var param = this.pageParam();
         var totalPage = Number($("#totalPage").html());
         var currentPage = Number($("#currentPage").html());
-        if (currentPage == totalPage) {
-            $.scojs_message("已经是最后一页了！", $.scojs_message.TYPE_WARNING);
-        }
-        pager(param, '../user/pageUser', 'userTableTemp', 'userListTab');
         param.currentPage = currentPage;
-    }
-};
+        param.totalPage = totalPage;
+        pagerService.lastPage(param);
+    },
 
-$("#querUser").click(function () {
-    userList.firstPage();
-});
-
-var dialogObj;
-
-//用户新增modal窗口
-$("#userAdd").click(function () {
-    dialogObj = addOrUpdateDialog('用户新增', '../admin/user/userAdd.html');
-    dialogObj.open();
-});
-
-//用戶刪除
-function userDelete(id) {
-    userDelete = new Service('../user');
-    userDelete.remove(id, {success: userDeleteCallBack});
-
-    function userDeleteCallBack(data) {
+    //用戶刪除
+    userDelete: function (id) {
+        var userDelete = new Service('../user');
+        userDelete.remove(id, {success: this.userDeleteCallBack});
+    },
+    userDeleteCallBack: function (data) {
         if (data.errorCode == 0) {
-            userList.firstPage();
+            userList.queryUser();
         } else {
             $.scojs_message(data.msg, $.scojs_message.TYPE_ERROR);
         }
+    },
+
+    userUpdateModal: function (userId) {
+        var userUpdateModal = new Service('../user');
+        userUpdateModal.getById(userId, {success: userUpdateModalCallBack});
+        function userUpdateModalCallBack(data) {
+            var $html = template('userUpdateTemp', data.object);
+            var dialog = new bootDialog('用户修改', $html);
+            dialog.htmlElementDialog(updateUser);
+        }
+    }
+};
+
+function updateUser() {
+    var userId = $("#updateUserId").val();
+    var userName = $("#updateUserName").val();
+    var passWord = $("#updatePassWord").val();
+    var salt = $("#updateSalt").val();
+    var state = $("#updateState").val();
+    var param = {"passWord": passWord, "salt": salt, "userId": userId, "state": state, "userName": userName};
+    var updateUser = new Service("../user/updateUser");
+    updateUser.add(param, {success: updateUserCallBack});
+    function updateUserCallBack(data) {
+        $.scojs_message('用户信息修改成功', $.scojs_message.TYPE_OK);
     }
 }
+
+
+//分页查询
+$("#querUser").click(function () {
+    userList.queryUser();
+});
+
+//用户新增modal窗口
+$("#userAdd").click(function () {
+    var dialog = new bootDialog('用户修改', '../admin/user/userAdd.html');
+    dialog.loadHtmlDialog();
+});
 
 $(function () {
     userList.firstPage();

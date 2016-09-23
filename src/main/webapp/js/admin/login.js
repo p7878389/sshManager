@@ -47,4 +47,4 @@ $(function () {
             $.scojs_message(data.msg, $.scojs_message.TYPE_WARNING);
         }
     }
-})
+});

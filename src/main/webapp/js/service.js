@@ -6,15 +6,8 @@ function Service(url) {
         success: function () {
         },
         err: function (data, alert) {
-            BootstrapDialog.show({
-                title: '警告',
-                message: data.msg,
-                type: BootstrapDialog.TYPE_WARNING
-            });
+            $.scojs_message(data.msg, $.scojs_message.TYPE_ERROR);
         },
-        loginAgain: function () {
-            $.scojs_message("用户信息已失效，请重新登录！", $.scojs_message.TYPE_ERROR);
-        }
     }
     this.errorHandler = function (XMLHttpRequest, textStatus, errorThrown) {
         debugger;
@@ -58,10 +51,6 @@ Service.prototype = {
             url: this.rootUrl + '?' + $.param(param),
             dataType: "json",
             success: function (data) {
-                if (data.errorCode == SESSION_NULL) {
-                    opt.loginAgain();
-                    return;
-                }
                 if (data.errorCode != 0) {
                     opt.err(data);
                     return;
@@ -81,10 +70,6 @@ Service.prototype = {
             url: this.rootUrl + '?' + $.param(param),
             dataType: "json",
             success: function (data) {
-                if (data.errorCode == SESSION_NULL) {
-                    opt.loginAgain();
-                    return;
-                }
                 if (data.errorCode != 0) {
                     opt.err(data);
                     return;
@@ -103,7 +88,7 @@ Service.prototype = {
             url: this.rootUrl + '?' + $.param(param),
             dataType: "json",
             success: function (data) {
-                if (data.errCode != 0) {
+                if (data.errorCode != 0) {
                     opt.err(data);
                     return;
                 }
@@ -164,10 +149,6 @@ Service.prototype = {
             async: false,
             dataType: "json",
             success: function (data) {
-                if (data.errorCode == token_invalid_errorCode) {
-                    opt.loginAgain(alert);
-                    return;
-                }
                 if (data.errorCode != 0) {
                     opt.err(data);
                     return;
@@ -209,6 +190,9 @@ Service.prototype = {
             dataType: "json",
             data: JSON.stringify(param),
             success: function (data) {
+                if (data.errorCode != 0) {
+                    opt.err(data);
+                }
                 opt.success(data);
             },
             error: this.errorHandler
@@ -217,16 +201,17 @@ Service.prototype = {
 
     //update
     update: function (param, callback) {
+        //param._method = 'put';
         $.ajax({
             cache: false,
-            type: 'PUT',
+            type: 'POST',
             contentType: 'application/json',
             url: this.rootUrl + '/' + param.id,
             dataType: "json",
             data: JSON.stringify(param),
             success: function (data) {
                 if (data.errorCode != 0) {
-                    alert(data.msg);
+                    $.scojs_message(data.msg);
                     return;
                 }
                 callback(data);
@@ -235,7 +220,6 @@ Service.prototype = {
         });
     },
 
-    //update
     updateEx: function (urlparam, param, callback) {
         $.ajax({
             cache: false,
@@ -258,6 +242,10 @@ Service.prototype = {
             type: 'DELETE',
             url: this.rootUrl + '/' + id,
             success: function (data) {
+                if (data.errorCode != 0) {
+                    opt.err(data);
+                    return;
+                }
                 opt.success(data);
             },
             error: this.errorHandler

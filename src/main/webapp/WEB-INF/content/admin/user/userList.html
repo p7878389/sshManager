@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>用户列表</title>
+
     <script src="../js/page.js" type="text/javascript"></script>
     <script src="../js/admin/user/userList.js" type="text/javascript"></script>
 
     <link href="../css/admin/user/userList.css" rel="stylesheet">
+
 </head>
 <body>
 <div class="container-fluid">
@@ -53,25 +55,30 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 col-lg-offset-3 text-right" style="margin-top: 28px">
-                            <span>当前页：<span id="currentPage"></span></span>
-                            <span class="ml-10">总页数：<span id="totalPage"></span></span>
-                            <span class="ml-10">总记录数：<span id="totalCount"></span></span>
-                        </div>
-                        <div class="col-lg-5 ">
-                            <div id="pager">
-                                <!--<nav>
-                                    <ul class="pager">
-                                        <li onclick="userList.firstPage()"><a href="#">首页</a></li>
-                                        <li onclick="userList.previousPage()"><a href="#">上一页</a></li>
-                                        <li onclick="userList.nextPage()"><a href="#">下一页</a></li>
-                                        <li onclick="userList.lastPage()"><a href="#">末页</a></li>
-                                    </ul>
-                                </nav>-->
-                                <button type="button" class="btn btn-warning btn-sm" onclick="userList.firstPage()">首页</button>
-                                <button type="button" class="btn btn-warning btn-sm" onclick="userList.previousPage()">上一页</button>
-                                <button type="button" class="btn btn-warning btn-sm" onclick="userList.nextPage()">下一页</button>
-                                <button type="button" class="btn btn-warning btn-sm" onclick="userList.lastPage()">末页</button>
+                        <div class="mt-40">
+                            <div class="col-lg-4 col-lg-offset-3 text-right">
+                                <div>
+                                    <span>当前页：<span id="currentPage"></span></span>
+                                    <span class="ml-10">总页数：<span id="totalPage"></span></span>
+                                    <span class="ml-10">总记录数：<span id="totalCount"></span></span>
+                                </div>
+                            </div>
+                            <div class="col-lg-5  text-center">
+                                <div id="pager">
+                                    <button type="button" class="btn btn-warning btn-sm" onclick="userList.firstPage()">
+                                        首页
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-sm"
+                                            onclick="userList.previousPage()">
+                                        上一页
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-sm" onclick="userList.nextPage()">
+                                        下一页
+                                    </button>
+                                    <button type="button" class="btn btn-warning btn-sm" onclick="userList.lastPage()">
+                                        末页
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -81,37 +88,4 @@
     </div>
 </div>
 </body>
-
-<script id="userTableTemp" type="text/html">
-    <tr>
-        <td>用户名</td>
-        <td>盐</td>
-        <td>用户状态</td>
-        <td>操作</td>
-    </tr>
-    {{each results as user index}}
-    {{ if index%2==0}}
-    <tr class="">
-        {{else}}
-    <tr class="">
-        {{/if}}
-
-        <td>{{user.userName}}</td>
-        <td>{{user.salt}}</td>
-        <td>
-            {{if user.state==0}}
-            可用
-            {{else}}
-            锁定
-            {{/if}}
-        </td>
-        <td>
-            <span class="btn btn-primary btn-sm" userTabId="{{user.userId}}">修改<span
-                    class="glyphicon glyphicon-pencil"></span></span>
-            <span class="btn btn-danger btn-sm" onclick='userDelete({{user.userId}})'>删除<span
-                    class="glyphicon glyphicon-trash"></span></span>
-        </td>
-    </tr>
-    {{/each}}
-</script>
 </html>
