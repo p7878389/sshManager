@@ -8,7 +8,7 @@ var userList = {
         var pageParam = {"userName": userName, "state": state, "salt": salt};
         var param = {};
         param.queryParam = pageParam;
-        param.url = "../user/pageUser";
+        param.url = "/user/pageUser";
         param.tempId = "userPageTemp";
         param.tableId = "userListTab";
         return param;

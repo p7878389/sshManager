@@ -41,7 +41,7 @@ $(function () {
         if (data.errorCode == 0) {
             sessionStorage.setItem("userName", data.object.userName);
             sessionStorage.setItem("userId", data.object.userId);
-            window.location.href = "../admin/index-home.html" + "?_" + (new Date().valueOf());
+            window.location.href = "../admin/home/index-home.html" + "?_" + (new Date().valueOf());
             ;
         } else {
             $.scojs_message(data.msg, $.scojs_message.TYPE_WARNING);

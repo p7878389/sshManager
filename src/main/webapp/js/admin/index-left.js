@@ -1,4 +1,4 @@
-tree = {
+var tree = {
     treeCallback: function (data) {
         var nodes = treeData(data.object);
         var options = {
@@ -15,17 +15,16 @@ tree = {
                 return;
             }
             $("#rigth", parent.document).load(url);
-
         });
     },
 
     initMenu: function () {
         var userId = sessionStorage.getItem("userId");
         if (userId == null) {
-            window.location.href = "../admin/login.html";
+            window.location.href = "/admin/login.html";
             return ;
         }
-        treeService = new Service("../resource/initMenu");
+        var treeService = new Service("/resource/initMenu");
         treeService.getById(userId, {success: this.treeCallback});
     }
 };
