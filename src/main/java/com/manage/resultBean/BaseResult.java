@@ -1,7 +1,7 @@
 package com.manage.resultBean;
 
 import com.manage.constant.BusinessException;
-import com.manage.constant.ErrorsDiscriptor;
+import com.manage.constant.ErrorConstant;
 
 /**
  * Created by Administrator on 2016/6/26.
@@ -20,9 +20,9 @@ public class BaseResult {
 		this.success = true;
 	}
 
-	public BaseResult(ErrorsDiscriptor errorsDiscriptor, boolean success) {
-		this.errorCode = errorsDiscriptor.getCode();
-		this.msg = errorsDiscriptor.getMsg();
+	public BaseResult(ErrorConstant errorConstant, boolean success) {
+		this.errorCode = errorConstant.getCode();
+		this.msg = errorConstant.getMsg();
 		this.success = success;
 	}
 

@@ -1,7 +1,7 @@
 package com.manage.controller;
 
 import com.manage.constant.BusinessException;
-import com.manage.constant.ErrorsDiscriptor;
+import com.manage.constant.ErrorConstant;
 import com.manage.resultBean.BaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ public class GlobalController {
 	public ResponseEntity<BaseResult> servletErrorHandler(HttpServletRequest req, ServletException e) throws Exception {
 		LOG.error( "Controller called error!Catch in servletErrorHandler", e );
 		LOG.error( "Url:{},Method:{},Content:{}", req.getRequestURL(), req.getMethod(), getContentFromReq( req ) );
-		BaseResult result = new BaseResult( ErrorsDiscriptor.INTERNAL_SERVICE_ERROR, false );
+		BaseResult result = new BaseResult( ErrorConstant.INTERNAL_SERVICE_ERROR, false );
 		ResponseEntity<BaseResult> responseEntity = ResponseEntity.badRequest().body( result );
 		return responseEntity;
 	}
@@ -69,7 +69,7 @@ public class GlobalController {
 	public ResponseEntity<BaseResult> defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
 		LOG.error( "Controller called error!Catch in defaultErrorHandler", e );
 		LOG.error( "Url:{},Method:{},Content:{}", req.getRequestURL(), req.getMethod(), getContentFromReq( req ) );
-		BaseResult result = new BaseResult( ErrorsDiscriptor.INTERNAL_SERVICE_ERROR, false );
+		BaseResult result = new BaseResult( ErrorConstant.INTERNAL_SERVICE_ERROR, false );
 		ResponseEntity<BaseResult> responseEntity = ResponseEntity.status( HttpStatus.INTERNAL_SERVER_ERROR ).body( result );
 		return responseEntity;
 	}

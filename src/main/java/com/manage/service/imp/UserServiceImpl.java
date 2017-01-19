@@ -1,6 +1,6 @@
 package com.manage.service.imp;
 
-import com.manage.constant.ErrorsDiscriptor;
+import com.manage.constant.ErrorConstant;
 import com.manage.dao.Imp.UserDaoImpl;
 import com.manage.entity.User;
 import com.manage.service.UserService;
@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 			userDaoImpl.delete( id );
 		} catch (Exception e) {
 			log.error( "delete user error for: id{}", id, e );
-			throw ErrorsDiscriptor.USER_DELETE_ERROR.e();
+			throw ErrorConstant.USER_DELETE_ERROR.e();
 		}
 	}
 
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
 			userDaoImpl.saveOrUpdate( user );
 		} catch (Exception e) {
 			log.error( "saveOrUpdate for:{} user{}", JsonUtil.INSTANCE.objectToJson( user ), e );
-			throw ErrorsDiscriptor.USER_SAVE_ERROR.e();
+			throw ErrorConstant.USER_SAVE_ERROR.e();
 		}
 	}
 

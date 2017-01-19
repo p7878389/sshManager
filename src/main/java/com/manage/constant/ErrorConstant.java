@@ -3,12 +3,12 @@ package com.manage.constant;
 import com.manage.resultBean.BaseResult;
 
 /**
- * 类名：ErrorsDiscriptor <br/>
+ * 类名：ErrorConstant <br/>
  * 功能说明： <br/>
  * 修改历史： <br/>
  * 1.[2016/10/9  14:34]创建类 by pxh
  */
-public enum ErrorsDiscriptor {
+public enum ErrorConstant {
 
 	/***
 	 * 系统相关错误
@@ -43,7 +43,7 @@ public enum ErrorsDiscriptor {
 	private int code;
 	private String msg;
 
-	ErrorsDiscriptor(int code, String msg) {
+	ErrorConstant(int code, String msg) {
 		this.code = code;
 		this.msg = msg;
 

@@ -20,9 +20,9 @@ public class BusinessException extends RuntimeException {
 		super( msg );
 	}
 
-	public BusinessException(ErrorsDiscriptor errorsDiscriptor) {
-		super( errorsDiscriptor.getMsg() );
-		this.errCode = errorsDiscriptor.getCode();
+	public BusinessException(ErrorConstant errorConstant) {
+		super( errorConstant.getMsg() );
+		this.errCode = errorConstant.getCode();
 	}
 
 

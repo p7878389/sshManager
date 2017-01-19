@@ -1,6 +1,6 @@
 package com.manage.check;
 
-import com.manage.constant.ErrorsDiscriptor;
+import com.manage.constant.ErrorConstant;
 import com.manage.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public enum UserCheck {
 	public void checkUserId(User user) {
 		if (user == null || user.getUserId() == null) {
 			LOG.error( "user param is null" );
-			throw ErrorsDiscriptor.PARAM_NULLPOINTER.e();
+			throw ErrorConstant.PARAM_NULLPOINTER.e();
 		}
 	}
 }

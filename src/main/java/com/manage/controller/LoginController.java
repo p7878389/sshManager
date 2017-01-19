@@ -1,6 +1,6 @@
 package com.manage.controller;
 
-import com.manage.constant.ErrorsDiscriptor;
+import com.manage.constant.ErrorConstant;
 import com.manage.entity.User;
 import com.manage.service.imp.UserServiceImpl;
 import com.manage.resultBean.BaseResult;
@@ -38,10 +38,10 @@ public class LoginController {
 		BaseResult result = new BaseResult();
 		user = userService.findByUser( user );
 		if (user == null) {
-			throw ErrorsDiscriptor.USER_PASSWORD_ERROR.e();
+			throw ErrorConstant.USER_PASSWORD_ERROR.e();
 		} else {
 			if (!user.getState().equals( 0 )) {
-				throw ErrorsDiscriptor.USER_PASSWORD_ERROR.e();
+				throw ErrorConstant.USER_PASSWORD_ERROR.e();
 			}
 			Subject subject = SecurityUtils.getSubject();
 			UsernamePasswordToken token = new UsernamePasswordToken( user.getUserName(), user.getPassWord() );
@@ -70,7 +70,7 @@ public class LoginController {
 			}
 		} catch (Exception e) {
 			logger.error( "用户注销失败", e );
-			throw ErrorsDiscriptor.USER_LOGOUT_ERROR.e();
+			throw ErrorConstant.USER_LOGOUT_ERROR.e();
 		}
 		return ResponseEntity.ok().body( new BaseResult() );
 	}
