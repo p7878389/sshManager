@@ -1,6 +1,7 @@
 package com.manage.Interceptor;
 
 
+import com.manage.constant.ErrorsDiscriptor;
 import com.manage.controller.LoginController;
 import com.manage.resultBean.BaseResult;
 import com.manage.util.JsonUtil;
@@ -38,8 +39,7 @@ public class GlobalInterceptor extends HandlerInterceptorAdapter {
 					&& request.getHeader( "x-requested-with" ).equalsIgnoreCase( "XMLHttpRequest" )) {
 				//是ajax请求，则返回个消息给前台
 				PrintWriter printWriter = response.getWriter();
-				BaseResult result = null;
-				printWriter.print( JsonUtil.INSTANCE.objectToJson( result ) );
+				printWriter.print( JsonUtil.INSTANCE.objectToJson( ErrorsDiscriptor.USER_SESSION_INVALID.getResult() ) );
 				printWriter.flush();
 				printWriter.close();
 			} else {

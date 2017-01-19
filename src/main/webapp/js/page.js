@@ -6,7 +6,7 @@ var pagerService = {
     },
 
     pageCallBack: function (data, tempId, tableId) {
-        data = data.object;
+        data = data.data;
         var $html = template(tempId, data);
         $("#" + tableId).html("");
         $("#" + tableId).append($html);

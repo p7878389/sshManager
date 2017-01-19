@@ -58,7 +58,6 @@ public class CacheAspect {
 	 */
 	@Around("setCacheRedis()")
 	public Object setCache(ProceedingJoinPoint joinPoint) {
-
 		Object result = null;
 		Method method = getMethod( joinPoint );
 		Cacheable cacheable = method.getAnnotation( Cacheable.class );

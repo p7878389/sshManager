@@ -1,5 +1,7 @@
 package com.manage.constant;
 
+import com.manage.resultBean.BaseResult;
+
 /**
  * 类名：ErrorsDiscriptor <br/>
  * 功能说明： <br/>
@@ -71,5 +73,10 @@ public enum ErrorsDiscriptor {
 	 */
 	public BusinessException e() {
 		return new BusinessException( this );
+	}
+
+
+	public BaseResult getResult() {
+		return new BaseResult( this, true );
 	}
 }
