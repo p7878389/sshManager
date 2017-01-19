@@ -84,10 +84,4 @@
     <!-- aop配置 -->
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 
-
-    <!-- 构造方法注入redisManager -->
-    <bean id="cacheAspect" class="com.manage.annotations.CacheAspect">
-        <property name="redisClient" ref="redisClient"/>
-    </bean>
-
 </beans>

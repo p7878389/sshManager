@@ -6,7 +6,7 @@ $(function () {
 
 $("#userInfoDialog").bind("click", function () {
     var userId = sessionStorage.getItem("userId");
-    var userInfo = new Service("../user");
+    var userInfo = new Service("/user");
     userInfo.getById(userId, {success: findUserCallback});
 });
 
@@ -18,13 +18,19 @@ function findUserCallback(data) {
 
 function updateUser() {
     var userId = sessionStorage.getItem("userId");
-    var personService = new Service("../user/updateUser");
+    var personService = new Service("/user");
     var passWord = $("#passWord").val();
     var userName = $("#userName").val();
     var salt = $("#salt").val();
     var state = $("#state").val();
-    param = {"passWord": passWord, "salt": salt, "userId": userId, "userName": userName, "state": state};
-    personService.add(param, updateUserCallBack, updateUserErrorCallBack);
+    var param = {
+        "passWord": passWord,
+        "salt": salt,
+        "userId": userId,
+        "userName": userName,
+        "state": state
+    };
+    personService.updatePut(param, updateUserCallBack);
 }
 
 function updateUserCallBack(data) {
@@ -57,7 +63,7 @@ $("#logout").bind("click", function () {
             }
         }]
     });
-})
+});
 
 function logoutCallback(data) {
     if (data.errorCode == 0) {

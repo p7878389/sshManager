@@ -9,20 +9,14 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.io.*;
-
-import static com.mchange.v2.ser.SerializableUtils.toByteArray;
-import static org.apache.commons.lang.ArrayUtils.toObject;
 
 /***
  * spring redis cacheManager
  */
 public class SpringRedisCache implements Cache {
 
-    private final static Logger log = LoggerFactory.getLogger(SpringRedisCache.class);
+    private static final  Logger log = LoggerFactory.getLogger(SpringRedisCache.class);
 
     /***
      * redis模板

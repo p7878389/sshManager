@@ -201,12 +201,32 @@ Service.prototype = {
 
     //update
     update: function (param, callback) {
-        //param._method = 'put';
+        param._method = 'PUT';
         $.ajax({
             cache: false,
             type: 'POST',
             contentType: 'application/json',
             url: this.rootUrl + '/' + param.id,
+            dataType: "json",
+            data: JSON.stringify(param),
+            success: function (data) {
+                if (data.errorCode != 0) {
+                    $.scojs_message(data.msg);
+                    return;
+                }
+                callback(data);
+            },
+            error: this.errorHandler
+        });
+    },
+    
+    updatePut: function (param, callback) {
+        param._method = 'PUT';
+        $.ajax({
+            cache: false,
+            type: 'POST',
+            contentType: 'application/json',
+            url: this.rootUrl + '/' + param.userId,
             dataType: "json",
             data: JSON.stringify(param),
             success: function (data) {

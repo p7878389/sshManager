@@ -1,5 +1,4 @@
 $(function () {
-    $("#signError").hide();
     $('#loginForm')
         .bootstrapValidator({
                 message: 'This value is not valid',

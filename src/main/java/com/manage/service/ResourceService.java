@@ -10,15 +10,15 @@ import java.util.List;
 
 public interface ResourceService {
 
-    public static final Integer MENU_TYPE=1;
+	Integer MENU_TYPE = 1;
 
-    public Resource getResource(Integer id);
+	Resource getResource(Integer id);
 
-    public void updateResource(Resource resource);
+	void updateResource(Resource resource);
 
-    public List<Resource> initMenu(int id);
+	List<Resource> initMenu(int id);
 
-    public List<Resource> findAllResource();
+	List<Resource> findAllResource();
 
 
 }
