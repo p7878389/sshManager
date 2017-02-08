@@ -22,9 +22,9 @@ import java.io.BufferedReader;
  * 1.[2016/12/22  10:58]创建类 by pxh
  */
 @ControllerAdvice
-public class GlobalController {
+public class GlobalExcepController {
 
-	private static final Logger LOG = LoggerFactory.getLogger( GlobalController.class );
+	private static final Logger LOG = LoggerFactory.getLogger( GlobalExcepController.class );
 
 	/***
 	 * 自定义业务异常 返回200

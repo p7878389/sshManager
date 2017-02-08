@@ -12,11 +12,19 @@
 
         <!-- spring jar 版本设置 -->
         <spring.version>4.2.0.RELEASE</spring.version>
+
+        <!-- jackson -->
+        <jackson.version>1.9.6</jackson.version>
+        <jackson-databind.version>2.1.4</jackson-databind.version>
+
+        <!-- 阿里巴巴json解析 -->
+        <alibaba-fastjson.version>1.1.21</alibaba-fastjson.version>
+
         <!-- shiro jar版本 -->
         <shiro.version>1.2.4</shiro.version>
 
         <!-- mysql jar 版本 -->
-        <mysql.version>5.1.26</mysql.version>
+        <mysql.version>5.1.30</mysql.version>
 
         <!-- 数据连接池 -->
         <c3p0.version>0.9.1.2</c3p0.version>
@@ -24,6 +32,7 @@
         <!-- 日志管理 -->
         <log4j.version>1.2.17</log4j.version>
         <slf4j.version>1.7.5</slf4j.version>
+        <commons-logging.version>1.1.2</commons-logging.version>
 
         <!-- redis -->
         <data-redis.version>1.3.4.RELEASE</data-redis.version>
@@ -37,12 +46,15 @@
         <commons-fileupload.version>1.3.1</commons-fileupload.version>
 
         <commons-beanutils.version>1.8.3</commons-beanutils.version>
+        <commons-commons-lang.version>3.0</commons-commons-lang.version>
+        <commons-collections.version>3.2.1</commons-collections.version>
 
         <!-- shiro-redis -->
         <shiro-redis.version>2.4.2.1-RELEASE</shiro-redis.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
         <jdk.version>1.7</jdk.version>
-        
+
     </properties>
     <dependencies>
         <dependency>
@@ -151,38 +163,39 @@
             <version>${log4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
         </dependency>
 
         <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>${commons-logging.version}</version>
+        </dependency>
+
+         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>${commons-fileupload.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>${commons-beanutils.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+         <dependency>
+             <groupId>commons-fileupload</groupId>
+             <artifactId>commons-fileupload</artifactId>
+             <version>${commons-fileupload.version}</version>
+         </dependency>
+         <dependency>
+             <groupId>commons-beanutils</groupId>
+             <artifactId>commons-beanutils</artifactId>
+             <version>${commons-beanutils.version}</version>
+             <exclusions>
+                 <exclusion>
+                     <groupId>commons-logging</groupId>
+                     <artifactId>commons-logging</artifactId>
+                 </exclusion>
+             </exclusions>
+         </dependency>
 
         <!-- shiro -->
         <dependency>
@@ -215,55 +228,62 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.30</version>
+            <version>${mysql.version}</version>
         </dependency>
 
         <!-- ################### json解释 ################ -->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-lgpl</artifactId>
-            <version>1.9.6</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
-            <version>1.9.4</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.9.5</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-lgpl</artifactId>
-            <version>1.9.6</version>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.1.4</version>
+            <version>${jackson-databind.version}</version>
         </dependency>
         <!-- ############################################## -->
 
+        <!-- java cpu 内存监控 -->
         <dependency>
             <groupId>org.fusesource</groupId>
             <artifactId>sigar</artifactId>
             <version>1.6.4</version>
         </dependency>
 
+        <!-- 阿里巴巴json解析 -->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.1.21</version>
+            <version>${alibaba-fastjson.version}</version>
         </dependency>
 
+        <!-- 集合工具包 -->
         <dependency>
             <groupId>commons-collections</groupId>
             <artifactId>commons-collections</artifactId>
-            <version>3.2.1</version>
+            <version>${commons-collections.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-commons-lang.version}</version>
+        </dependency>
     </dependencies>
     <build>
         <finalName>com.manage</finalName>
