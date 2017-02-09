@@ -44,7 +44,7 @@ public class ResourceController {
 	 *
 	 * @param id <br/>
 	 * @return org.springframework.http.ResponseEntity<com.manage.resultBean.BaseResult> <br/>
-	 * 修改历史：<br/>
+	 * 修改历史：<br/> 
 	 * 1.[2016/9/2 16:42 ] 创建方法 by pxh
 	 */
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
